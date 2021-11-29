@@ -1,0 +1,37 @@
+WindowManager:
+    MainWindow:
+    OptionsWindow:
+    AboutWindow:
+    PlayWindow:
+
+<MainWindow>:
+    name:"main"
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding:100
+        spacing:50
+        BoxLayout:
+            orientation:'horizontal'
+            TextInput:
+                id:mood
+                hint_text:"Enter mood or return for random"
+                on_text:app.process()
+            Button:
+                text:"Play"
+                # pos_hint:{'center_x':.73}
+                # size_hint:(.3,1.)
+        Button:
+            text:"About"
+        Button:
+            text:"Options"
+
+
+<OptionsWindows>:
+    name:"options"
+
+<AboutWindow>:
+    name:"about"
+
+<PlayWindow>:
+    name:"play"
