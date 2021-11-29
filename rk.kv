@@ -13,10 +13,13 @@ WindowManager:
         spacing:50
         BoxLayout:
             orientation:'horizontal'
+
             TextInput:
+                multiline:False
                 id:mood
                 hint_text:"Enter mood or return for random"
-                on_text:app.process()
+                on_text:root.process()
+                on_text_validate:root.go_play()
             Button:
                 text:"Play"
                 # pos_hint:{'center_x':.73}
