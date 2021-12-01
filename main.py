@@ -9,9 +9,8 @@ from kivy.uix.widget import Widget
 Config.set('graphics', 'multisamples', '0')
 
 
-class RkMainApp(App):
-    def build(self):
-        self.root = Builder.load_file('rk.kv')
+class WindowManager(ScreenManager):
+    pass
 
 
 class MainWindow(Screen):
@@ -20,6 +19,7 @@ class MainWindow(Screen):
         print(self.ids.mood.text)
 
     def go_play(self):
+        # check for no value = random art
         mood_text = self.ids.mood.text
     pass
 
@@ -27,14 +27,22 @@ class MainWindow(Screen):
 class OptionsWindow(Screen):
     pass
 
+
 class PlayWindow(Screen):
     pass
+
 
 class AboutWindow(Screen):
     pass
 
-class WindowManager(ScreenManager):
-    pass
+
+kv = Builder.load_file('rk.kv')
+
+
+class RkMainApp(App):
+    def build(self):
+        self.root = kv
+        return kv
 
 if __name__ == "__main__":
     RkMainApp().run()

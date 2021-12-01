@@ -24,6 +24,9 @@ WindowManager:
                 text:"Play"
                 # pos_hint:{'center_x':.73}
                 # size_hint:(.3,1.)
+                on_release:
+                    app.root.current = "play"
+                    root.manager.transition.direction = "right"
         Button:
             text:"About"
         Button:
@@ -38,3 +41,22 @@ WindowManager:
 
 <PlayWindow>:
     name:"play"
+
+    BoxLayout:
+        orientation:'vertical'
+        Button:
+            text:'tiles'
+            size_hint:1,.2
+        Button:
+            text:'play area'
+            size_hint:1,.8
+        BoxLayout:
+            orientation:'horizontal'
+            #text:'dashboard'
+            size_hint:1,.2
+
+            Button:
+                name:"Go Back"
+                on_release:
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
