@@ -1,0 +1,46 @@
+<PlayWindow>:
+    name:"play"
+
+    BoxLayout:
+        orientation:'vertical'
+        Button:
+            text:'tiles'
+            size_hint:1,.2
+        Widget:
+            id:game_canvas
+            canvas:
+                Color:
+                    rgba:0,0,.5,1
+
+                Rectangle:
+                    id:"puzzle_bg"
+                    size:game_canvas.width,game_canvas.height
+                    pos:game_canvas.x,game_canvas.y
+        BoxLayout:
+            orientation:'horizontal'
+            #text:'dashboard'
+            size_hint:1,.2
+
+            Button:
+                name:"Go Back"
+                # TODO when in play text should be pause
+                text:"go back"
+                size_hint:.8,1
+                on_release:
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+            Button:
+                name:"Reshuffle"
+                text:"reshuffle"
+                # TODO active only in play
+                size_hint:.8,1
+            Label:
+                text:"score"
+                size_hint:.8,1
+            Label:
+                text:"art piece info"
+                size_hint:.8,1
+            Label:
+                # TODO number of tries number of tiles left to go time leader board
+                text:"play stats"
+                size_hint:.8,1
