@@ -1,4 +1,4 @@
-from src.game_consts.game_constants import *
+from src.GameConsts.game_consts import *
 
 class Level:
     def __init__(self, id, name, bg_trans, tiles_hor,tiles_ver,tiles_on_board_number,show_bg_then_fade,
