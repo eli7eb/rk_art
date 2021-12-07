@@ -3,6 +3,9 @@ from kivy.app import App
 from kivy import Config
 from kivy.properties import ObjectProperty
 from src.GameScreens.navigation_screen_manager import NavigationScreenManager
+from src.GameScreens.about_screen import AboutScreen
+from src.GameScreens.settings_screen import SettingScreen
+from src.GameScreens.play_screen import PlayScreen
 
 # from GameScreens.options_screen import OptionsWindow
 

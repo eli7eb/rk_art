@@ -1,8 +1,7 @@
-#:import play_screen .GameScreens/play_screen
+#:include navigation_screen_manager
+#:import play_screen play_screen
 #:import settings_screen settings_screen
 #:import about_screen about_screen
-#:import navigation_screen_manager navigation_screen_manager
-
 
 <MainWindow@BoxLayout>:
     orientation:"vertical"
@@ -33,10 +32,7 @@
             on_press:app.manager.push("About")
 
 <RkScreenManager>
-    Screen:
-        name:"MainMenu"
-        MainMenu:
-    Screen:
+    PlayScreen:
         name:"Play"
         Play:
     Screen:
