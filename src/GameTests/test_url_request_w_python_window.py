@@ -3,7 +3,6 @@ import json
 # TODO only for the text
 import random
 import datetime
-from tkinter import *
 from kivy import Config
 from kivy.lang import Builder
 from kivy.app import App
@@ -33,14 +32,17 @@ kv = Builder.load_string('''
 <RootLayout>:
     WindowManager:
         ImageScreen:
+        
             name:"ImageScreen"
             id:image_screen
-            
+            Image:
+                id:img
+                pos_hint:{"left":1, 'bottom':1}
+                size_hint:1,1
+                allow_stretch:True    
             BoxLayout:
                 orientation:'vertical'
                 id:layout_id
-                Image:
-                    id:image_show
                 Button:
                     id:show_image
                     text:"show image"
@@ -186,6 +188,7 @@ class GetArtImage:
         # look for z3 or z4
         image_levels = self.art_obj['levels']
         art_level = self.searchForLevel(image_levels)
+        # PIL image
         canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255,255,255))
         # final_image = image.resize((width, height))
 
@@ -211,10 +214,8 @@ class GetArtImage:
         size = grid_image.size
         # bytes_data = grid_image.tobytes()
 
-        # data = CoreImage(bytes_data,ext="RGB").texture
-        now = datetime.datetime.now()
-        image_to_save_file_name = "images/image_"+now.strftime("%Y-%m-%d-%H-%M-%S")+".RGB"
-        grid_image.save (image_to_save_file_name)
+
+
         return grid_image
         # grid_image.show()
         # TODO py_image = pygame.image.fromstring(data, size, mode)
@@ -252,21 +253,13 @@ class ImageApp(App):
         art_title_obj = get_art_tiles.getArtImage()
         art_image = GetArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
         canvas_img = art_image.getBitmapFromTiles()
-        data = BytesIO()
-        canvas_img.save(data,format('png'))
-        data.seek(0)
 
-        canvas = Canvas(self, bg="black", height=800, width=600)
-        canvas.pack(expand=YES,fill=BOTH)
-        canvas.image = ImageTk.PhotoImage(iw)
-        canvas.create_image(0,0,image=canvas.image,anchor='nw')
-
-
-
-        self.iw.pos = (200,200)
-        s = Widget()
-        s.add_widget(self.iw)
-
+        # data = CoreImage(bytes_data,ext="RGB").texture
+        now = datetime.datetime.now()
+        image_to_save_file_name = "images/image_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
+        canvas_img.save(image_to_save_file_name)
+        self.root.ids.img.source = image_to_save_file_name
+        # self.img.texture = CoreImage(image_to_save_file_name).texture
 
         # iw = Image.open("./DSC08518.JPG")   # Use PIL.Image
         # iw.save('./phase.jpg')
