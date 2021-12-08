@@ -27,8 +27,7 @@
                 text:"go back"
                 size_hint:.8,1
                 on_release:
-                    app.root.current = "main"
-                    root.manager.transition.direction = "left"
+                    app.manager.pop()
             Button:
                 name:"Reshuffle"
                 text:"reshuffle"

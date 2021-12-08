@@ -1,13 +1,8 @@
-
 from kivy.app import App
 from kivy import Config
 from kivy.properties import ObjectProperty
-from src.GameScreens.navigation_screen_manager import NavigationScreenManager
-from src.GameScreens.about_screen import AboutScreen
-from src.GameScreens.settings_screen import SettingScreen
-from src.GameScreens.play_screen import PlayScreen
+from navigation_screen_manager import NavigationScreenManager
 
-# from GameScreens.options_screen import OptionsWindow
 
 # from kivy.uix.widget import Widget
 
@@ -26,5 +21,4 @@ class RkMainApp(App):
         return self.manager
 
 
-if __name__ == "__main__":
-    RkMainApp().run()
+RkMainApp().run()

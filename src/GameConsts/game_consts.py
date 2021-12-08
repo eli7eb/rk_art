@@ -1,4 +1,4 @@
-from src.GameScreens.game_level import Level
+from src.game_level import Level
 
 
 SCREEN_WIDTH = 600
