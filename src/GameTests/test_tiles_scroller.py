@@ -209,11 +209,11 @@ class GetArtImage:
     # on a beginner level I have 4 - 6
     # then 5 - 7
     # then 7 - 9
-    def fit_squares(self,image):
+    def fit_squares(self, image, number_tiles):
         logger = RkLogger.__call__().get_logger()
         logger.info("fit_squares")
         im = image
-        num_tiles = self.level['num_tiles']
+        num_tiles = number_tiles
         width = im.width
         height = im.height
 
@@ -396,9 +396,10 @@ class DrawGrid:
 class TilesApp(App):
     img_file = ObjectProperty()
     img_src = StringProperty()
+    level = levels['beginner']
 
     def show_image(self):
-        level = levels['intermid']
+
 
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
@@ -409,16 +410,24 @@ class TilesApp(App):
         get_art_tiles = GetArtTiles(art_dict)
         title = art_dict['title']
         long_title = art_dict['longTitle']
+        print('title ' + title + ' long title '+long_title)
+        print ('getArtTiles')
         art_title_obj = get_art_tiles.getArtImage()
+
+        print('getArtTiles done')
+        print('getArtImage')
         art_image = GetArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
+        print('getBitMapFromTiles')
         canvas_img = art_image.getBitmapFromTiles()
 
         # get tile size
-        tile_tuple = art_image.fit_sqaures(canvas_img)
+        print('fitSquares')
+        tile_tuple = art_image.fit_squares(canvas_img,self.level['num_tiles'])
         tile_size = tile_tuple[0]
         num_cols = tile_tuple[1]
         num_rows = tile_tuple[2]
         locations_matrix = [[1] * num_cols for n in range(num_rows)]
+        print('crop_image_to_array')
         tiles_grid = art_image.crop_image_to_array(tile_tuple, canvas_img)
         # data = CoreImage(bytes_data,ext="RGB").texture
         now = datetime.datetime.now()

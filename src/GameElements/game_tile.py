@@ -4,9 +4,8 @@
 # from pygame.locals import *
 from PIL import Image
 # # pygame.sprite.Sprite#
-class Tile(Image):
+class Tile():
     def __init__(self, image,  size, pos, coords, state):
-        super(Tile,self).__init__()
         self.image = image
         #self.transparant_image = transparant_image
         self.size = size
