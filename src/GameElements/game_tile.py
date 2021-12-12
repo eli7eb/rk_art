@@ -15,8 +15,10 @@ class Tile():
         self.y = pos[1]
         self.coords = coords
         self.state = state
-        self.rect = self.image.get_rect(center=pos)
+        # TODO make sure I dont use it = or find equivalent in kivy
+        # self.rect = self.image.get_rect(center=pos)
+
         # bullet position is according the player position
-        self.rect.centerx = self.x_pos
-        self.rect.bottom = self.y_pos
+        # self.rect.centerx = self.x_pos
+        # self.rect.bottom = self.y_pos
         self.speedy = -15

@@ -59,11 +59,12 @@ kv = Builder.load_string('''
 # values are first 2 are row,col on the left side
 # last 2 are bottom right on the right side
 # TODO if error exit game ? or find new image ?
+# TODO rethink it mean while return OK
 def validate_crop_size(image, tile_size):
-    w = abs(image.width - tile_size)
-    h = abs(image.height - tile_size)
-    if w > 5 or h > 5:
-        return False
+    #w = abs(image.width - tile_size)
+    #h = abs(image.height - tile_size)
+    #if w > 5 or h > 5:
+    #    return False
     return True
 
 # from box and image size get the x y coodinates in the grid
@@ -76,7 +77,7 @@ def getXYCoordinatesFromBox(box, tile_size):
     y = box[1] + tile_size/2
     x_index = int(x/tile_size)
     y_index = int(y/tile_size)
-    return y_index, x_index
+    return  x_index, y_index
 
 
 class SearchArt:
@@ -263,44 +264,46 @@ class GetArtImage:
 
         tile_matrix = [[1] * num_cols for n in range(num_rows)]
         counter = 0
-
+        x_counter = 0
+        y_counter = 0
         for x0 in range(0, width, chopsize):
             for y0 in range(0, height, chopsize):
+                print("x0 "+str(x0) + " y0 "+str(y0))
+
                 box = (x0, y0,
                 x0 + chopsize if x0 + chopsize < width else width - 1,
                 y0 + chopsize if y0 + chopsize < height else height - 1)
-            print('box {}'.format(box))
+                print_str = "counter {} box {}"
+                print(print_str.format(counter,box))
 
-            cropped = im.crop(box)
-            if validate_crop_size(cropped, chopsize):
-                mode = cropped.mode
-                size = cropped.size
-                data = cropped.tobytes()
-                # cropped_image = pygame.image.fromstring(data, size, mode)
+                cropped = im.crop(box)
+                if validate_crop_size(cropped, chopsize):
+                    mode = cropped.mode
+                    size = cropped.size
+                    data = cropped.tobytes()
+                    # cropped_image = pygame.image.fromstring(data, size, mode)
 
-                # position is set in game view when the tile is displayed
-                counter += 1
-                coords = getXYCoordinatesFromBox(box, chopsize)
-                print("coords {}".format(str(coords)))
-                # TODO fix this
-                py_image_t = cropped.copy()  # self.get_tile_blurred(py_image)
-                py_tile = Tile(cropped, chopsize, (x0, y0), coords, TILE_INVISIBLE)
+                    # position is set in game view when the tile is displayed
+                    counter += 1
+                    # coords = getXYCoordinatesFromBox(box, chopsize)
+                    # print("coords {}".format(str(coords)))
+                    # TODO fix this
+                    py_image_t = cropped.copy()  # self.get_tile_blurred(py_image)
+                    coords = (x_counter,y_counter)
+                    pil_tile = Tile(cropped, chopsize, (x0, y0), coords, TILE_INVISIBLE)
+                    try:
+                        tile_matrix[x_counter][y_counter] = pil_tile
+                    except IndexError as error:
+                        print("Index error %s" + error)
+                    except Exception as exception:
+                        print("Exception %s"+exception)
+                    # img.crop(box).save('zchop.%s.x%03d.y%03d.jpg' % (infile.replace('.jpg', ''), x0, y0))
+                else:
+                    print('error on crop')
+                y_counter+=1
+                # PIL for transparant copy
+            x_counter+=1
 
-                tile_matrix[coords[0]][coords[1]] = py_tile
-                # img.crop(box).save('zchop.%s.x%03d.y%03d.jpg' % (infile.replace('.jpg', ''), x0, y0))
-            else:
-                print('error on crop')
-
-            # PIL for transparant copy
-
-            # position is set in game view when the tile is displayed
-            counter += 1
-            coords = getXYCoordinatesFromBox(box, chopsize)
-
-            py_tile = Tile(cropped, chopsize, (x0, y0), coords, TILE_INVISIBLE)
-
-            tile_matrix[coords[0]][coords[1]] = py_tile
-            # img.crop(box).save('zchop.%s.x%03d.y%03d.jpg' % (infile.replace('.jpg', ''), x0, y0))
 
         return tile_matrix
 
