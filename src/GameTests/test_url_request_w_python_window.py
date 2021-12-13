@@ -72,7 +72,7 @@ class SearchArt:
                 returned_list.append(item)
         return returned_list
 
-    def getImageList(self):
+    def get_image_list(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
 
@@ -120,7 +120,7 @@ class SearchArt:
         self.search_value = mood_str
         self.logger = RkLogger.__call__().get_logger()
 
-class GetArtTiles:
+class ArtTiles:
     print('get the one')
 
     def __init__(self, art_dict):
@@ -128,7 +128,7 @@ class GetArtTiles:
         self.art_dict = art_dict
         self.logger = RkLogger.__call__().get_logger()
 
-    def getArtImage(self):
+    def get_art_image(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
         # get random of list
@@ -164,7 +164,7 @@ class GetArtTiles:
 
 
 
-class GetArtImage:
+class ArtImage:
 
     def __init__(self, art_obj,width,height):
         self.currentState = None
@@ -175,19 +175,27 @@ class GetArtImage:
 
 
     # TODO add assert for error here
-    def searchForLevel(self, image_levels):
+    def get_art_level(self, image_levels):
         for l in image_levels:
             if l['name'] == 'z3':
                 return l
         return image_levels[0]
 
+    # I have image from RK
+    # I have the level which sets the number of tiles
+    # I have the window which limit
+    # so find the desired image size which will suit all these
+    # TODO
+    def calculate_desired_image_size(w,h):
+        return 0
+
     # image is returned in tiles which need to be pasted into one image
-    def getBitmapFromTiles(self):
+    def get_bitmap_from_tiles(self):
 
         # choose the level by name z0 is the largest resolution z6 is the lowest resolution
         # look for z3 or z4
         image_levels = self.art_obj['levels']
-        art_level = self.searchForLevel(image_levels)
+        art_level = self.get_art_level(image_levels)
         # PIL image
         canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255,255,255))
         # final_image = image.resize((width, height))
@@ -204,17 +212,16 @@ class GetArtImage:
 
 
         # I have the final image: 2 considerations:
+        # need to resize so that tile size is going to fit  !!!!!!!!!!
         # need to resize and keep aspect ratio - i have a maximum of size I can use
         # the width is setting the size of the resizing
         # the height sets the number and size of each tile
-        # need to resize so that tile size is going to fit
 
+        image_size = self.calculate_desired_image_size((canvas_image.size))
         grid_image = canvas_image.resize((int(self.width), int(self.height)),Image.LANCZOS)
         mode = grid_image.mode
         size = grid_image.size
         # bytes_data = grid_image.tobytes()
-
-
 
         return grid_image
         # grid_image.show()
@@ -245,14 +252,14 @@ class ImageApp(App):
         img_src = StringProperty()
         searchArtObj = SearchArt(mood)
 
-        art_dict = searchArtObj.getImageList()
+        art_dict = searchArtObj.get_image_list()
 
-        get_art_tiles = GetArtTiles(art_dict)
+        get_art_tiles = ArtTiles(art_dict)
         title = art_dict['title']
         long_title = art_dict['longTitle']
-        art_title_obj = get_art_tiles.getArtImage()
-        art_image = GetArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
-        canvas_img = art_image.getBitmapFromTiles()
+        art_title_obj = get_art_tiles.get_art_image()
+        art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
+        canvas_img = art_image.get_bitmap_from_tiles()
 
         # data = CoreImage(bytes_data,ext="RGB").texture
         now = datetime.datetime.now()

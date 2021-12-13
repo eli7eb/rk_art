@@ -32,7 +32,7 @@ class SearchArt:
                 returned_list.append(item)
         return returned_list
 
-    def getImageList(self):
+    def get_image_list(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
 
@@ -80,7 +80,7 @@ class SearchArt:
         self.search_value = mood_str
         self.logger = RkLogger.__call__().get_logger()
 
-class GetArtTiles:
+class ArtTiles:
     print('get the one')
 
     def __init__(self, art_dict):
@@ -88,7 +88,7 @@ class GetArtTiles:
         self.art_dict = art_dict
         self.logger = RkLogger.__call__().get_logger()
 
-    def getArtImage(self):
+    def get_art_image(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
         # get random of list
@@ -124,7 +124,7 @@ class GetArtTiles:
 
 
 
-class GetArtImage:
+class ArtImage:
 
     def __init__(self, art_obj,width,height):
         self.currentState = None
@@ -135,19 +135,19 @@ class GetArtImage:
 
 
     # TODO add assert for error here
-    def searchForLevel(self, image_levels):
+    def search_for_level(self, image_levels):
         for l in image_levels:
             if l['name'] == 'z3':
                 return l
         return image_levels[0]
 
     # image is returned in tiles which need to be pasted into one image
-    def getBitmapFromTiles(self):
+    def get_bitmap_from_tiles(self):
 
         # choose the level by name z0 is the largest resolution z6 is the lowest resolution
         # look for z3 or z4
         image_levels = self.art_obj['levels']
-        art_level = self.searchForLevel(image_levels)
+        art_level = self.search_for_level(image_levels)
         canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255,255,255))
         # final_image = image.resize((width, height))
 
@@ -189,12 +189,12 @@ mood = random.choice(MOOD_IDEAS)
 searchArtObj = SearchArt(mood)
 
 
-art_dict = searchArtObj.getImageList()
+art_dict = searchArtObj.get_image_list()
 
-get_art_tiles = GetArtTiles(art_dict)
+get_art_tiles = ArtTiles(art_dict)
 title = art_dict['title']
 long_title = art_dict['longTitle']
-art_title_obj = get_art_tiles.getArtImage()
-art_image = GetArtImage(art_title_obj,SCREEN_WIDTH,SCREEN_HEIGHT)
-art_image.getBitmapFromTiles()
+art_title_obj = get_art_tiles.get_art_image()
+art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
+art_image.get_bitmap_from_tiles()
 

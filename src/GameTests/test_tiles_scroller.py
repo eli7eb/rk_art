@@ -53,6 +53,7 @@ kv = Builder.load_string('''
   
 ''')
 
+
 # count number of spaces in grid is calculated as number of tiles horizontally -1
 # count number of spaces in grid is calculated as number of tiles vertically -1
 # function to validate the cropsize
@@ -61,23 +62,24 @@ kv = Builder.load_string('''
 # TODO if error exit game ? or find new image ?
 # TODO rethink it mean while return OK
 def validate_crop_size(image, tile_size):
-    #w = abs(image.width - tile_size)
-    #h = abs(image.height - tile_size)
-    #if w > 5 or h > 5:
+    # w = abs(image.width - tile_size)
+    # h = abs(image.height - tile_size)
+    # if w > 5 or h > 5:
     #    return False
     return True
 
+
 # from box and image size get the x y coodinates in the grid
-def getXYCoordinatesFromBox(box, tile_size):
+def get_xy_coordinates_from_box(box, tile_size):
     logger = RkLogger.__call__().get_logger()
     logger.info("box {}".format(box))
 
     # find the middle point
-    x = box[0] + tile_size/2
-    y = box[1] + tile_size/2
-    x_index = int(x/tile_size)
-    y_index = int(y/tile_size)
-    return  x_index, y_index
+    x = box[0] + tile_size / 2
+    y = box[1] + tile_size / 2
+    x_index = int(x / tile_size)
+    y_index = int(y / tile_size)
+    return x_index, y_index
 
 
 class SearchArt:
@@ -96,7 +98,7 @@ class SearchArt:
                 returned_list.append(item)
         return returned_list
 
-    def getImageList(self):
+    def get_image_list(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
 
@@ -108,9 +110,8 @@ class SearchArt:
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {0}'.format(rk_api_token)}
 
-
         query_params = {"q": self.search_value, "format": format_json, "object_type": rk_type_paint,
-                       "material": rk_type_material}
+                        "material": rk_type_material}
         try:
             response = requests.request("GET", rk_api_url_base_prefix, headers=headers, params=query_params)
             response.raise_for_status()
@@ -128,7 +129,7 @@ class SearchArt:
             json_obj = json.loads(response.content.decode('utf-8'))
             print('json objects {}'.format(json_obj['artObjects']))
             art_list = json_obj['artObjects']
-            art_portrait_list = self.get_matched_list(json_obj['artObjects'],PORTRAIT)
+            art_portrait_list = self.get_matched_list(json_obj['artObjects'], PORTRAIT)
             art_index = 0
             if len(art_portrait_list) > 0:
                 art_index = randrange(len(art_portrait_list))
@@ -144,6 +145,7 @@ class SearchArt:
         self.search_value = mood_str
         self.logger = RkLogger.__call__().get_logger()
 
+
 class GetArtTiles:
     print('get the one')
 
@@ -152,21 +154,21 @@ class GetArtTiles:
         self.art_dict = art_dict
         self.logger = RkLogger.__call__().get_logger()
 
-    def getArtImage(self):
+    def get_art_image(self):
         rk_api_token = 'aTcoXoCh'
         rk_url_postfix = '&q='
         # get random of list
         # String prefix = "https://www.rijksmuseum.nl/api/en/collection/"+params[0].get_object_number()+"/tiles?format=json&key=";
         format_json = 'json'
-        object_number = self.art_dict.get("objectNumber","")
+        object_number = self.art_dict.get("objectNumber", "")
         rk_type_paint = 'painting'
         rk_type_material = 'canvas'
         rk_url_call_end = '\''
-        rk_api_url_base_prefix = 'https://www.rijksmuseum.nl/api/en/collection/'+object_number+'/tiles'+'?key=' + rk_api_token
+        rk_api_url_base_prefix = 'https://www.rijksmuseum.nl/api/en/collection/' + object_number + '/tiles' + '?key=' + rk_api_token
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {0}'.format(rk_api_token)}
 
-        query_params = { "format": format_json }
+        query_params = {"format": format_json}
 
         try:
             response = requests.request("GET", rk_api_url_base_prefix, headers=headers, params=query_params)
@@ -184,32 +186,29 @@ class GetArtTiles:
             self.logger.info(json_obj)
             return (json_obj)
         else:
-            self.logger.error ('error '+response.status_code + ' '+response.text)
-
+            self.logger.error('error ' + response.status_code + ' ' + response.text)
 
 
 class GetArtImage:
 
-    def __init__(self, art_obj,width,height):
+    def __init__(self, art_obj, width, height):
         self.currentState = None
         self.art_obj = art_obj
         self.width = width
         self.height = height
         self.logger = RkLogger.__call__().get_logger()
 
-
     # TODO add assert for error here
-    def searchForLevel(self, image_levels):
+    def search_for_level(self, image_levels):
         for l in image_levels:
             if l['name'] == 'z3':
                 return l
         return image_levels[0]
 
-    # the squares need to be exactly the size to fit in the array
-    # we need to decide which comes first the image size or the tiles size
-    # on a beginner level I have 4 - 6
-    # then 5 - 7
-    # then 7 - 9
+    # I resized the image to 600 w and 800 h
+    # tiles can be 100 X 100 the grid is 6 X 8
+    # or 200 X 200 the grid is 3 X 4
+    # for other size I will need to resize the image differently
     def fit_squares(self, image, number_tiles):
         logger = RkLogger.__call__().get_logger()
         logger.info("fit_squares")
@@ -235,9 +234,6 @@ class GetArtImage:
         num_rows = int(height / size)
         return size, num_cols, num_rows
 
-
-
-
     # crop function
     # Set the cropping area with box=(left, upper, right, lower).
     # an_array = [[1, 2], [3, 4]]
@@ -252,90 +248,75 @@ class GetArtImage:
     # validate that I am not out side the image size
     # calculate where I am on the grid by dividing the box to the grid
     # create the tile object with image and image_transparent
-    def crop_image_to_array(self, tile_tuple, image):
+    # Note that the matrix is "y" address major, in other words, the "y index" comes before the "x index".
+    def crop_image_to_array(self, tile_size, num_cols, num_rows, image):
         im = image
-        # TODO 4 tiles across depends on level
         width = int(im.width)
         height = int(im.height)
-        chopsize = tile_tuple[0]
+        cols = num_cols
+        rows = num_rows
 
-        num_cols = tile_tuple[1]
-        num_rows = tile_tuple[2]
+        index_row = 0
+        index_colum = 0
+        left = 0
+        top = 0
+        right = width / cols
+        bottom = 0
+        tile_matrix = [[1] * num_rows for n in range(num_cols)]
 
-        tile_matrix = [[1] * num_cols for n in range(num_rows)]
-        counter = 0
-        x_counter = 0
-        y_counter = 0
-        for x0 in range(0, width, chopsize):
-            for y0 in range(0, height, chopsize):
-                print("x0 "+str(x0) + " y0 "+str(y0))
+        while right <= width:
 
-                box = (x0, y0,
-                x0 + chopsize if x0 + chopsize < width else width - 1,
-                y0 + chopsize if y0 + chopsize < height else height - 1)
-                print_str = "counter {} box {}"
-                print(print_str.format(counter,box))
+            bottom = height / rows
+            top = 0
+            while top < height:
+                print(f"h : {height}, w : {width}, left : {left},top : {top},right : {right}, bottom   :  {bottom}")
+                crop_img = im.crop((left, top, right, bottom))
+                try:
+                    tile_matrix[index_colum][index_row] = crop_img
+                except IndexError as error:
+                    print("Index error %s" + error)
+                except Exception as exception:
+                    print("Exception %s" + exception)
 
-                cropped = im.crop(box)
-                if validate_crop_size(cropped, chopsize):
-                    mode = cropped.mode
-                    size = cropped.size
-                    data = cropped.tobytes()
-                    # cropped_image = pygame.image.fromstring(data, size, mode)
+                crop_img.save("art_row_" + str(index_row) + "_col_" +str(index_colum) + ".jpg")
+                top = bottom
+                index_row += 1
+                bottom += height / rows
 
-                    # position is set in game view when the tile is displayed
-                    counter += 1
-                    # coords = getXYCoordinatesFromBox(box, chopsize)
-                    # print("coords {}".format(str(coords)))
-                    # TODO fix this
-                    py_image_t = cropped.copy()  # self.get_tile_blurred(py_image)
-                    coords = (x_counter,y_counter)
-                    pil_tile = Tile(cropped, chopsize, (x0, y0), coords, TILE_INVISIBLE)
-                    try:
-                        tile_matrix[x_counter][y_counter] = pil_tile
-                    except IndexError as error:
-                        print("Index error %s" + error)
-                    except Exception as exception:
-                        print("Exception %s"+exception)
-                    # img.crop(box).save('zchop.%s.x%03d.y%03d.jpg' % (infile.replace('.jpg', ''), x0, y0))
-                else:
-                    print('error on crop')
-                y_counter+=1
-                # PIL for transparant copy
-            x_counter+=1
-
+            index_colum += 1
+            index_row = 0
+            left = right
+            right += width / cols
 
         return tile_matrix
 
     # image is returned in tiles which need to be pasted into one image
-    def getBitmapFromTiles(self):
+    def get_bitmap_from_tiles(self):
 
         # choose the level by name z0 is the largest resolution z6 is the lowest resolution
         # look for z3 or z4
         image_levels = self.art_obj['levels']
-        art_level = self.searchForLevel(image_levels)
+        art_level = self.search_for_level(image_levels)
         # PIL image
-        canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255,255,255))
+        canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255, 255, 255))
         # final_image = image.resize((width, height))
 
         for i in art_level['tiles']:
             tmp_image = Image.open(requests.get(i['url'], stream=True).raw)
             tmp_x = i['x'] * GLOBAL_TILE_SIZE
             tmp_y = i['y'] * GLOBAL_TILE_SIZE
-            #print('image w h')
-            #print(final_image.width)
-            #print(final_image.height)
-            canvas_image.paste(tmp_image,(tmp_x,tmp_y))
-
-
+            # print('image w h')
+            # print(final_image.width)
+            # print(final_image.height)
+            canvas_image.paste(tmp_image, (tmp_x, tmp_y))
 
         # I have the final image: 2 considerations:
         # need to resize and keep aspect ratio - i have a maximum of size I can use
         # the width is setting the size of the resizing
         # the height sets the number and size of each tile
         # need to resize so that tile size is going to fit
-
-        grid_image = canvas_image.resize((int(self.width), int(self.height)),Image.LANCZOS)
+        # TILES can be 100 150 200 and 50 so I need to resize accordigly
+        grid_image = canvas_image.resize((int(self.width), int(self.height)), Image.LANCZOS)
         mode = grid_image.mode
         size = grid_image.size
         # bytes_data = grid_image.tobytes()
@@ -345,43 +326,41 @@ class GetArtImage:
         # TODO py_image = pygame.image.fromstring(data, size, mode)
         # TODO return py_image, grid_image
 
+
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2
 
 levels = {
-  "beginner" : {
-    "width" : 440,
-    "height" : 660,
-    "num_tiles": 24
+    "beginner": {
+        "width": 600,
+        "height": 800,
+        "cols": 3,
+        "rows": 4,
+        "tile_size": 200
     },
-  "intermid" : {
-    "width" : 450,
-    "height" : 630,
-    "num_tiles": 35
-  },
-   "inter_1": {
-     "width": 420,
-     "height": 630,
-     "num_tiles": 63
-   },
-   "inter_2": {
-      "width": 450,
-      "height": 630,
-      "num_tiles": 35
-   },
-    "master" : {
-    "width" : 450,
-    "height" : 650,
-    "num_tiles": 117
+    "beginner_1": {
+        "width": 600,
+        "height": 800,
+        "cols": 4,
+        "rows": 6,
+        "tile_size": 100
+    },
+    "intermid": {
+        "width": 600,
+        "height": 800,
+        "cols": 8,
+        "rows": 12,
+        "tile_size": 50
     }
 }
 
-
 Config.set('graphics', 'multisamples', '0')
+
 
 class RootLayout(FloatLayout):
     pass
+
 
 class ImageScreen(Screen):
     pass
@@ -396,42 +375,41 @@ class DrawGrid:
 
     pass
 
+
 class TilesApp(App):
     img_file = ObjectProperty()
     img_src = StringProperty()
     level = levels['beginner']
 
     def show_image(self):
-
-
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
         searchArtObj = SearchArt(mood)
 
-        art_dict = searchArtObj.getImageList()
+        art_dict = searchArtObj.get_image_list()
 
         get_art_tiles = GetArtTiles(art_dict)
         title = art_dict['title']
         long_title = art_dict['longTitle']
-        print('title ' + title + ' long title '+long_title)
-        print ('getArtTiles')
-        art_title_obj = get_art_tiles.getArtImage()
+        print('title ' + title + ' long title ' + long_title)
+        print('getArtTiles')
+        art_title_obj = get_art_tiles.get_art_image()
 
         print('getArtTiles done')
-        print('getArtImage')
+        print('get_art_image')
         art_image = GetArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
         print('getBitMapFromTiles')
-        canvas_img = art_image.getBitmapFromTiles()
+        canvas_img = art_image.get_bitmap_from_tiles()
 
         # get tile size
         print('fitSquares')
-        tile_tuple = art_image.fit_squares(canvas_img,self.level['num_tiles'])
-        tile_size = tile_tuple[0]
-        num_cols = tile_tuple[1]
-        num_rows = tile_tuple[2]
-        locations_matrix = [[1] * num_cols for n in range(num_rows)]
+        # tile_tuple = art_image.fit_squares(canvas_img,self.level['num_tiles'])
+        tile_size = self.level['tile_size']
+        num_cols = self.level['cols']
+        num_rows = self.level['rows']
+        # locations_matrix = [[1] * num_cols for n in range(num_rows)]
         print('crop_image_to_array')
-        tiles_grid = art_image.crop_image_to_array(tile_tuple, canvas_img)
+        tiles_grid = art_image.crop_image_to_array(tile_size, num_cols, num_rows, canvas_img)
         # data = CoreImage(bytes_data,ext="RGB").texture
         now = datetime.datetime.now()
         image_to_save_file_name = "images/image_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
@@ -443,9 +421,6 @@ class TilesApp(App):
         # crop to tiles
 
         # show tiles in random order in a horizontal box layout
-
-
-
 
     def build(self):
         return RootLayout()
