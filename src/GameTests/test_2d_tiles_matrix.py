@@ -34,22 +34,26 @@ kv = Builder.load_string('''
 <RootLayout>:
     WindowManager:
         ImageScreen:
-        
-            name:"ImageScreen"
-            id:image_screen
-            Image:
-                id:img
-                pos_hint:{"left":1, 'bottom':1}
-                size_hint:1,1
-                allow_stretch:True    
             BoxLayout:
                 orientation:'vertical'
-                id:layout_id
-                Button:
-                    id:show_image
-                    text:"show image"
-                    size_hint:0.15,0.15
-                    on_release: app.show_image()
+                name:"ImageScreen"
+                id:image_screen
+                Image:
+                    id:img
+                    pos_hint:{"left":1, 'bottom':1}
+                    size_hint:1,1
+                    allow_stretch:True
+                BoxLayout:
+                    orientation:'horizontal'
+                    BoxLayout:
+                        orientation:'horizontal'
+                        id:tiles_grid_id
+                        
+                    Button:
+                        id:show_image
+                        text:"show image"
+                        size_hint:0.15,0.15
+                        on_release: app.show_image()
   
 ''')
 
@@ -277,8 +281,8 @@ class GetArtImage:
                     print("Index error %s" + error)
                 except Exception as exception:
                     print("Exception %s" + exception)
-
-                crop_img.save("art_row_" + str(index_row) + "_col_" +str(index_colum) + ".jpg")
+                now = datetime.datetime.now()
+                crop_img.save("images/art_row_" + str(index_row) + "_col_" +str(index_colum) + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") +  ".jpg")
                 top = bottom
                 index_row += 1
                 bottom += height / rows
@@ -342,15 +346,15 @@ levels = {
     "beginner_1": {
         "width": 600,
         "height": 800,
-        "cols": 4,
-        "rows": 6,
+        "cols": 6,
+        "rows": 8,
         "tile_size": 100
     },
     "intermid": {
         "width": 600,
         "height": 800,
-        "cols": 8,
-        "rows": 12,
+        "cols": 12,
+        "rows": 16,
         "tile_size": 50
     }
 }
@@ -379,7 +383,7 @@ class DrawGrid:
 class TilesApp(App):
     img_file = ObjectProperty()
     img_src = StringProperty()
-    level = levels['beginner']
+    level = levels['beginner_1']
 
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
@@ -416,6 +420,7 @@ class TilesApp(App):
         canvas_img.save(image_to_save_file_name)
         self.root.ids.img.source = image_to_save_file_name
         # draw grid for the tiles
+
         # draw_grid_lines(self)
 
         # crop to tiles
