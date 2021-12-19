@@ -3,7 +3,7 @@ import json
 # TODO only for the text
 import random
 import datetime
-from kivy.uix.image import Image as KImage, AsyncImage as KAsyncImage
+from kivy.uix.image import Image as Kimage, AsyncImage as KAsyncImage
 from kivy.core.image import Image as CoreImage
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -168,7 +168,7 @@ class ArtImage:
         # the height sets the number and size of each tile
         # need to resize so that tile size is going to fit
 
-        grid_image = canvas_image.resize((int(self.width), int(self.height)),Image.LANCZOS)
+        grid_image = Kimage(canvas_image.resize((int(self.width), int(self.height)),Image.LANCZOS))
         mode = grid_image.mode
         size = grid_image.size
         data = grid_image.tobytes()

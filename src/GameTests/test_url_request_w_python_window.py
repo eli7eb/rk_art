@@ -3,6 +3,9 @@ import json
 # TODO only for the text
 import random
 import datetime
+import io
+from pathlib import Path
+
 from kivy import Config
 from kivy.lang import Builder
 from kivy.app import App
@@ -24,8 +27,11 @@ GLOBAL_TILE_SIZE = 512
 
 # TODO add try catch for all interactions with the API
 # explained https://stackoverflow.com/questions/3193060/catch-specific-http-error-in-python
-
-
+file_ext = 'RGB'
+local_art = { \
+    'vermeer': {'file':"../assets/milkmaid.png",'title':'Johannes Vermeer, The Milkmaid, c. 1660','long_title':'Johannes Vermeer, The Milkmaid, c. 1660'},
+    'van-goch': {'file':"../assets/portrait.jpg",'title':'Vincent van Gogh, Self-portrait, 1887.','long_title':'Vincent van Gogh, Self-portrait, 1887.'}
+    }
 kv = Builder.load_string('''
 #:kivy 1.11.0
 
@@ -197,7 +203,7 @@ class ArtImage:
         image_levels = self.art_obj['levels']
         art_level = self.get_art_level(image_levels)
         # PIL image
-        canvas_image = Image.new('RGB', (art_level['width'], art_level['height']), color=(255,255,255))
+        canvas_image = Image.new(file_ext, (art_level['width'], art_level['height']), color=(255,255,255))
         # final_image = image.resize((width, height))
 
         for i in art_level['tiles']:
@@ -250,22 +256,69 @@ class ImageApp(App):
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
-        searchArtObj = SearchArt(mood)
+        remote = False
 
-        art_dict = searchArtObj.get_image_list()
+        if remote:
 
-        get_art_tiles = ArtTiles(art_dict)
-        title = art_dict['title']
-        long_title = art_dict['longTitle']
-        art_title_obj = get_art_tiles.get_art_image()
-        art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
-        canvas_img = art_image.get_bitmap_from_tiles()
+            mood = random.choice(MOOD_IDEAS)
+            img_src = StringProperty()
+            searchArtObj = SearchArt(mood)
 
-        # data = CoreImage(bytes_data,ext="RGB").texture
-        now = datetime.datetime.now()
-        image_to_save_file_name = "images/image_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
-        canvas_img.save(image_to_save_file_name)
-        self.root.ids.img.source = image_to_save_file_name
+            art_dict = searchArtObj.get_image_list()
+
+            get_art_tiles = ArtTiles(art_dict)
+            title = art_dict['title']
+            long_title = art_dict['longTitle']
+            art_title_obj = get_art_tiles.get_art_image()
+            art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
+            canvas_img = art_image.get_bitmap_from_tiles()
+
+            # data = CoreImage(bytes_data,ext="RGB").texture
+            now = datetime.datetime.now()
+            image_to_save_file_name = "images/image_" + title + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") + "."+file_ext
+            canvas_img.save(image_to_save_file_name)
+            self.root.ids.img.source = image_to_save_file_name
+        else:
+            local_art_key = random.choice(list(local_art.keys()))
+            local_art_object = local_art[local_art_key]
+            base_path = Path(__file__).parent.resolve()
+            file_path = (base_path / local_art_object['file']).resolve()
+            local_pil_image = Image.open(file_path)
+
+            self.title = local_art_object['title']
+            self.long_title = local_art_object['long_title']
+            local_pil_image = local_pil_image.convert(file_ext)
+            local_pil_image = local_pil_image.resize((SCREEN_WIDTH, SCREEN_HEIGHT), Image.LANCZOS)
+            data = local_pil_image.getdata()  # you'll get a list of tuples
+            newData = []
+            for a in data:
+                a = a[:3]  # you'll get your tuple shorten to RGB
+                a = a + (100,)  # change the 100 to any transparency number you like between (0,255)
+                newData.append(a)
+            local_pil_image.putdata(newData)  # you'll get your new img ready
+            mode = local_pil_image.mode
+            size = local_pil_image.size
+            bytes_data = local_pil_image.tobytes()
+            data = io.BytesIO(bytes_data)
+            data.seek(0)
+            cim = CoreImage(data, ext=file_ext)
+            self.root.ids.img.source = cim
+            # now = datetime.datetime.now()
+        # image_to_save_file_name = "images/image_" + title + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
+        # image_data.save(image_to_save_file_name)
+        # try:
+        #     data = io.BytesIO(open(image_to_save_file_name, "rb").read())
+        # except Exception:
+        #     print("Exception ")
+        # else:
+        #     im = CoreImage(data, ext="png")
+        #     #binary_data.source = canvas_img
+        #     #data = io.BytesIO(binary_data)
+        #     self.img.texture = im.texture
+
+
+
+            # self.root.ids.img.source = self.img
         # self.img.texture = CoreImage(image_to_save_file_name).texture
 
         # iw = Image.open("./DSC08518.JPG")   # Use PIL.Image

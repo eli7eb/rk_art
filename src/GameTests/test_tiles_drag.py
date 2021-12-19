@@ -7,20 +7,22 @@ import datetime
 from kivy import Config
 from kivy.lang import Builder
 from kivy.app import App
+from kivy.uix.behaviors import DragBehavior
 from kivy.uix.widget import Widget
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.image import Image as KImage, AsyncImage as KAsyncImage
+from kivy.uix.image import Image as Kimage, AsyncImage as KAsyncImage
 from kivy.core.image import Image as CoreImage
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont
 from io import BytesIO
 from random import randrange
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, TILE_INVISIBLE
 from src.GameUtils.game_logger import RkLogger
 from src.GameElements.game_tile import Tile
+from PIL import Image
 
 GLOBAL_TILE_SIZE = 512
 
@@ -54,10 +56,18 @@ kv = Builder.load_string('''
                     BoxLayout:
                         orientation:'horizontal'
                         id:tiles_grid_id
+                        MoveableImage:
+                            id:tile_image
+                            pos_hint:{"left":1, 'bottom':1}
+                            size_hint:1,1
+                            allow_stretch:True
                 
                     
 ''')
 
+
+class MoveableImage(Kimage, DragBehavior):
+    __metaclass__ = DragBehavior
 
 
 class SearchArt:
@@ -331,6 +341,12 @@ class TilesApp(App):
     img_src = StringProperty()
     level = levels['beginner']
 
+    # show the tiles to drag in the hor boxlayout
+    def show_tiles(self, img):
+        self.root.ids.tile_image.source = img
+
+    # show the loaded entire image in the screen
+    # for test purposes
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
@@ -363,7 +379,7 @@ class TilesApp(App):
         canvas_img.save(image_to_save_file_name)
         self.root.ids.img.source = image_to_save_file_name
         # draw grid for the tiles
-
+        self.show_tiles(tiles_grid[0][0])
         # draw_grid_lines(self)
 
         # crop to tiles
