@@ -27,14 +27,13 @@ class Application(App):
             file_path = (base_path / local_art_object['file']).resolve()
             pillow_image = PillowImage.open(file_path)
 
-        draw = ImageDraw.Draw(pillow_image)
         # for x in range(0, WIDTH, 5):
         #     draw.line((0, x, x, WIDTH), fill=(x, x, x, 255))
         #     draw.line((x, WIDTH, WIDTH, WIDTH - x), fill=(x, x, x, 255))
         #
         #     draw.line((WIDTH, WIDTH - x, WIDTH - x, 0), fill=(x, x, x, 255))
         #     draw.line((WIDTH - x, 0, 0, x), fill=(x, x, x, 255))
-
+        draw = ImageDraw.Draw(pillow_image)
         # create bytes from the image data
         image_bytes = BytesIO()
         pillow_image.save(image_bytes, format='png')

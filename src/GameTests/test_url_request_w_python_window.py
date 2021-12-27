@@ -257,12 +257,12 @@ class ImageApp(App):
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
-        remote = True
+        remote = False
 
         if remote:
 
             mood = random.choice(MOOD_IDEAS)
-            img_src = StringProperty()
+
             searchArtObj = SearchArt(mood)
 
             art_dict = searchArtObj.get_image_list()
@@ -271,80 +271,36 @@ class ImageApp(App):
             title = art_dict['title']
             long_title = art_dict['longTitle']
             art_title_obj = get_art_tiles.get_art_image()
-            pillow_image = Image.new(mode='RGBA', size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+            # pillow_image = Image.new(mode='RGBA', size=(SCREEN_WIDTH, SCREEN_HEIGHT))
             art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
-            pil_canvas_img = art_image.get_bitmap_from_tiles()
-            image_bytes = pil_canvas_img.tobytes()
-            # pillow_image.save(image_bytes, format='png')
-            image_bytes.seek(0)
-            core_image = CoreImage(image_bytes, ext='png')
-            texture = core_image.texture
-            img = KImage(texture=texture)
+            pillow_image = art_image.get_bitmap_from_tiles()
+
             now = datetime.datetime.now()
             image_to_save_file_name = "images/image_" + title + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") + "." + file_ext
-            pil_canvas_img.save(image_to_save_file_name)
-            pil_image = Image(source="")
-
-            imgIO.seek(0)
-            imgData = io.BytesIO(imgIO.read())
-            pil_image.texture = CoreImage(imgData, ext='png').texture
-            pil_image.reload()
-            # data = CoreImage(bytes_data,ext="RGB").texture
-            now = datetime.datetime.now()
-            image_to_save_file_name = "images/image_" + title + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") + "."+file_ext
-            pil_canvas_img.save(image_to_save_file_name)
-            self.root.ids.img.source = image_to_save_file_name
+            pillow_image.save(image_to_save_file_name)
         else:
             local_art_key = random.choice(list(local_art.keys()))
             local_art_object = local_art[local_art_key]
             base_path = Path(__file__).parent.resolve()
             file_path = (base_path / local_art_object['file']).resolve()
-            local_pil_image = Image.open(file_path)
+            pillow_image = Image.open(file_path)
 
             self.title = local_art_object['title']
             self.long_title = local_art_object['long_title']
-            local_pil_image = local_pil_image.convert(file_ext)
-            local_pil_image = local_pil_image.resize((SCREEN_WIDTH, SCREEN_HEIGHT), Image.LANCZOS)
-            data = local_pil_image.getdata()  # you'll get a list of tuples
-            newData = []
-            for a in data:
-                a = a[:3]  # you'll get your tuple shorten to RGB
-                a = a + (100,)  # change the 100 to any transparency number you like between (0,255)
-                newData.append(a)
-            local_pil_image.putdata(newData)  # you'll get your new img ready
-            mode = local_pil_image.mode
-            size = local_pil_image.size
-            bytes_data = local_pil_image.tobytes()
-            data = io.BytesIO(bytes_data)
-            data.seek(0)
-            cim = CoreImage(data, ext=file_ext).texture
-            self.root.ids.img.source = cim
-            # now = datetime.datetime.now()
-        # image_to_save_file_name = "images/image_" + title + "_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
-        # image_data.save(image_to_save_file_name)
-        # try:
-        #     data = io.BytesIO(open(image_to_save_file_name, "rb").read())
-        # except Exception:
-        #     print("Exception ")
-        # else:
-        #     im = CoreImage(data, ext="png")
-        #     #binary_data.source = canvas_img
-        #     #data = io.BytesIO(binary_data)
-        #     self.img.texture = im.texture
+        draw = ImageDraw.Draw(pillow_image)
+        # create bytes from the image data
+        image_bytes = BytesIO()
+        pillow_image.save(image_bytes, format='png')
+        image_bytes.seek(0)
+
+            # load image data in a kivy texture
+        core_image = CoreImage(image_bytes, ext='png')
 
 
-
-            # self.root.ids.img.source = self.img
-        # self.img.texture = CoreImage(image_to_save_file_name).texture
-
-        # iw = Image.open("./DSC08518.JPG")   # Use PIL.Image
-        # iw.save('./phase.jpg')
-        #gray = iw.convert('1')
-        #now = datetime.datetime.now()
-        #bw_image_to_save_file_name = "images/image_bw_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".RGB"
-        #gray.save(bw_image_to_save_file_name)
-        # works self.img_file = "images/image.RGB"  # './phase.jpg'
-        # self.root.add_widget(iw)
+        texture = core_image.texture
+        k_image = KImage()
+        k_image.texture = texture
+        self.root.ids.img.texture = texture
 
     def build(self):
         return RootLayout()
