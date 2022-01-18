@@ -30,60 +30,42 @@ GLOBAL_TILE_SIZE = 512
 file_ext = 'jpg'
 file_mode = 'RGB'
 local_art = { \
-    'vermeer': {'file':"../assets/milkmaid.png",'title':'Johannes Vermeer, The Milkmaid, c. 1660','long_title':'Johannes Vermeer, The Milkmaid, c. 1660'},
-    'van-goch': {'file':"../assets/portrait.jpg",'title':'Vincent van Gogh, Self-portrait, 1887.','long_title':'Vincent van Gogh, Self-portrait, 1887.'}
-    }
+    'vermeer': {'file': "../assets/milkmaid.png", 'title': 'Johannes Vermeer, The Milkmaid, c. 1660',
+                'long_title': 'Johannes Vermeer, The Milkmaid, c. 1660'},
+    'van-goch': {'file': "../assets/portrait.jpg", 'title': 'Vincent van Gogh, Self-portrait, 1887.',
+                 'long_title': 'Vincent van Gogh, Self-portrait, 1887.'}
+}
 kv = Builder.load_string('''
 #:kivy 1.11.0
-#:import utils kivy.utils
 
 <RootLayout>:
     WindowManager:
-        
         ImageScreen:
-            name:"ImageScreen"
-            id:image_screen
-            BoxLayout:
-                id:tiles_box_layout_id
-                orientation:'horizontal'
-                canvas.before:
-                    Color:
-                        rgb: utils.get_color_from_hex("#39B3F2")
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-                
-                
-                padding: 10
-                spacing: 10
-                Image:
-                    id:tile_1
-                    allow_stretch:False  
-            Image:
-                id:img
-                canvas.before:
-                    Color:
-                        rgb: utils.get_color_from_hex("#000000")
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-                pos_hint:{"left":1, 'bottom':1}
-                size_hint:1,.8
-                allow_stretch:True    
             BoxLayout:
                 orientation:'vertical'
-                id:layout_id
+                id:screen_layout_id              
+                ScrollView:
+                    size_hint: None, None
+                    size: screen_layout_id.width, screen_layout_id.height * .2
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    GridLayout:
+                        cols: 1
+                        padding: 10
+                        spacing: 10
+                        height: self.minimum_height
+                Image:
+                    id:img
+                    size_hint:1,1
+                    allow_stretch:True    
                 Button:
                     id:show_image
                     text:"show image"
                     size_hint:0.15,0.15
-                    on_release:
-                        app.get_and_show_image_tiles()
+                    on_release: app.show_image()
 
-  
+
 ''')
-
-
 
 
 class SearchArt:
@@ -114,9 +96,8 @@ class SearchArt:
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {0}'.format(rk_api_token)}
 
-
         query_params = {"q": self.search_value, "format": format_json, "object_type": rk_type_paint,
-                       "material": rk_type_material}
+                        "material": rk_type_material}
         try:
             response = requests.request("GET", rk_api_url_base_prefix, headers=headers, params=query_params)
             response.raise_for_status()
@@ -134,7 +115,7 @@ class SearchArt:
             json_obj = json.loads(response.content.decode('utf-8'))
             print('json objects {}'.format(json_obj['artObjects']))
             art_list = json_obj['artObjects']
-            art_portrait_list = self.get_matched_list(json_obj['artObjects'],PORTRAIT)
+            art_portrait_list = self.get_matched_list(json_obj['artObjects'], PORTRAIT)
             art_index = 0
             if len(art_portrait_list) > 0:
                 art_index = randrange(len(art_portrait_list))
@@ -150,6 +131,7 @@ class SearchArt:
         self.search_value = mood_str
         self.logger = RkLogger.__call__().get_logger()
 
+
 class ArtTiles:
     print('get the one')
 
@@ -164,15 +146,15 @@ class ArtTiles:
         # get random of list
         # String prefix = "https://www.rijksmuseum.nl/api/en/collection/"+params[0].get_object_number()+"/tiles?format=json&key=";
         format_json = 'json'
-        object_number = self.art_dict.get("objectNumber","")
+        object_number = self.art_dict.get("objectNumber", "")
         rk_type_paint = 'painting'
         rk_type_material = 'canvas'
         rk_url_call_end = '\''
-        rk_api_url_base_prefix = 'https://www.rijksmuseum.nl/api/en/collection/'+object_number+'/tiles'+'?key=' + rk_api_token
+        rk_api_url_base_prefix = 'https://www.rijksmuseum.nl/api/en/collection/' + object_number + '/tiles' + '?key=' + rk_api_token
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {0}'.format(rk_api_token)}
 
-        query_params = { "format": format_json }
+        query_params = {"format": format_json}
 
         try:
             response = requests.request("GET", rk_api_url_base_prefix, headers=headers, params=query_params)
@@ -190,19 +172,17 @@ class ArtTiles:
             self.logger.info(json_obj)
             return (json_obj)
         else:
-            self.logger.error ('error '+response.status_code + ' '+response.text)
-
+            self.logger.error('error ' + response.status_code + ' ' + response.text)
 
 
 class ArtImage:
 
-    def __init__(self, art_obj,width,height):
+    def __init__(self, art_obj, width, height):
         self.currentState = None
         self.art_obj = art_obj
         self.width = width
         self.height = height
         self.logger = RkLogger.__call__().get_logger()
-
 
     # TODO add assert for error here
     def get_art_level(self, image_levels):
@@ -216,7 +196,7 @@ class ArtImage:
     # I have the window which limit
     # so find the desired image size which will suit all these
     # TODO
-    def calculate_desired_image_size(w,h):
+    def calculate_desired_image_size(w, h):
         return 0
 
     # image is returned in tiles which need to be pasted into one image
@@ -227,19 +207,17 @@ class ArtImage:
         image_levels = self.art_obj['levels']
         art_level = self.get_art_level(image_levels)
         # PIL image open as HTTP request
-        canvas_image = Image.new(file_mode, (art_level['width'], art_level['height']), color=(255,255,255))
+        canvas_image = Image.new(file_mode, (art_level['width'], art_level['height']), color=(255, 255, 255))
         # final_image = image.resize((width, height))
 
         for i in art_level['tiles']:
             tmp_image = Image.open(requests.get(i['url'], stream=True).raw)
             tmp_x = i['x'] * GLOBAL_TILE_SIZE
             tmp_y = i['y'] * GLOBAL_TILE_SIZE
-            #print('image w h')
-            #print(final_image.width)
-            #print(final_image.height)
-            canvas_image.paste(tmp_image,(tmp_x,tmp_y))
-
-
+            # print('image w h')
+            # print(final_image.width)
+            # print(final_image.height)
+            canvas_image.paste(tmp_image, (tmp_x, tmp_y))
 
         # I have the final image: 2 considerations:
         # need to resize so that tile size is going to fit  !!!!!!!!!!
@@ -248,7 +226,7 @@ class ArtImage:
         # the height sets the number and size of each tile
 
         image_size = self.calculate_desired_image_size((canvas_image.size))
-        grid_image = canvas_image.resize((int(self.width), int(self.height)),Image.LANCZOS)
+        grid_image = canvas_image.resize((int(self.width), int(self.height)), Image.LANCZOS)
         mode = grid_image.mode
         size = grid_image.size
         # bytes_data = grid_image.tobytes()
@@ -258,33 +236,34 @@ class ArtImage:
         # TODO py_image = pygame.image.fromstring(data, size, mode)
         # TODO return py_image, grid_image
 
+
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2
 
 Config.set('graphics', 'multisamples', '0')
 
+
 class RootLayout(FloatLayout):
     pass
+
 
 class ImageScreen(Screen):
     pass
 
+
 class WindowManager(ScreenManager):
     pass
+
 
 class ImageApp(App):
     img_file = ObjectProperty()
     img_src = StringProperty()
-
-
-
-
-
-    def get_image(self,remote_boolean):
+    # called with button press
+    def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
-        remote = remote_boolean
+        remote = False
 
         if remote:
 
@@ -320,27 +299,14 @@ class ImageApp(App):
         pillow_image.save(image_bytes, format='png')
         image_bytes.seek(0)
 
-            # load image data in a kivy texture
+        # load image data in a kivy texture
         core_image = CoreImage(image_bytes, ext='png')
-
 
         texture = core_image.texture
         k_image = KImage()
+
         k_image.texture = texture
         self.root.ids.img.texture = texture
-        return k_image
-
-
-    def get_and_show_image_tiles(self):
-        k_image = self.get_image(False)
-        texture = k_image.texture
-        bottomleft = texture.get_region(0, 0, 64, 64)
-        b_img = KImage(size=(64, 64),texture=bottomleft)
-        self.root.ids.tile_1.texture = bottomleft
-
-        bottomright = texture.get_region(0, 64, 64, 64)
-        topleft = texture.get_region(0, 64, 64, 64)
-        topright = texture.get_region(64, 64, 64, 64)
 
     def build(self):
         return RootLayout()
