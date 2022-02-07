@@ -20,7 +20,7 @@ from kivy.core.image import Image as CoreImage
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from random import randrange
-from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS
+from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, GAME_LEVELS, LEVEL_NEWBIE
 from src.GameUtils.game_logger import RkLogger
 
 GLOBAL_TILE_SIZE = 512
@@ -260,11 +260,16 @@ class ImageApp(App):
     img_file = ObjectProperty()
     img_src = StringProperty()
     # called with button press
+    # show image is built from several steps
+    # decide if local or remote - if network not available then get a local image (is it legal ?)
+    # if remote get a list of images based on mood key word and choose one image randomly
+    # get this image as tiles and build it to one
+    # at the end crop the texture to grid of tiles and display them in the scroller view
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
         remote = False
-
+        game_level = GAME_LEVELS[LEVEL_NEWBIE]
         if remote:
 
             mood = random.choice(MOOD_IDEAS)
@@ -306,7 +311,21 @@ class ImageApp(App):
         k_image = KImage()
 
         k_image.texture = texture
+        # divide the texture to tiles
+        # based on the level
+        num_tiles_hor = game_level.tiles_hor
+        num_tiles_ver = game_level.tiles_ver
+        num_tiles = num_tiles_ver*num_tiles_hor
         self.root.ids.img.texture = texture
+
+
+        # populate the scroller view with the tiles in random order
+        # get_region(x, y, width, height)
+        tiles = []
+        for i in range(num_tiles_ver):
+            for j in range(num_tiles_hor):
+
+                tiles.append(texture.get_region(i*num_tiles_ver*GLOBAL_TILE_SIZE,j*num_tiles_hor*GLOBAL_TILE_SIZE,GLOBAL_TILE_SIZE,GLOBAL_TILE_SIZE))
 
     def build(self):
         return RootLayout()

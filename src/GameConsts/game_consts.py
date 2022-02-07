@@ -44,7 +44,7 @@ local_art = { \
     'van-goch': {'file':"../assets/portrait.jpg",'title':'Vincent van Gogh, Self-portrait, 1887.','long_title':'Vincent van Gogh, Self-portrait, 1887.'}
     }
 
-levels = { \
+GAME_LEVELS = { \
     LEVEL_NEWBIE: Level(LEVEL_NEWBIE, 'newbie', True,4,6,True,0,True,0),
     LEVEL_BEGIN: Level(LEVEL_BEGIN, 'begin', True,4,6,True,0,True,0),
     LEVEL_INTER: Level(LEVEL_INTER, 'inter', True,5,7,True,0,True,0),
