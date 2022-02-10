@@ -1,12 +1,13 @@
-#:import play_screen play_screen
-#:import settings_screen settings_screen
-#:import about_screen about_screen
+#:import play_screen View.play_screen
+#:import settings_screen View.settings_screen
+#:import about_screen View.about_screen
 #:import navigation_screen_manager navigation_screen_manager
 <MenuButton@Button>:
     background_color:(0,0,0,0)
     back_color:(1,0,1,1)
-    size_hint:.8,.3
-    border_radius:[18]
+    font_size: 0.25 * self.height
+    size_hint:.8,.2
+    border_radius:[10]
     canvas.before:
         Color:
             rgba:
@@ -16,24 +17,24 @@
             pos:self.pos
             radius:[10]
 
-<MainMenu@BoxLayout>:
+<MainMenu@Screen>:
     orientation:"vertical"
     BoxLayout:
         orientation: 'vertical'
-        size_hint:.8,.8
+        size_hint:.6,.6
+        spacing:10
+        padding:70,100
         pos_hint: {'center_x':.5,'center_y':.5}
-        padding:100
-        spacing:50
         TextInput:
-            size_hint:.8,.3
             multiline:False
-            id:mood
+            id:mood_input
+            size_hint:.8,.07
             hint_text:"Enter mood or return for random"
 #           on_text:root.process()
 #           on_text_validate:root.go_play()
         MenuButton:
             text:"Play"
-            on_press:app.manager.push("PlayScreen")
+            on_press:app.manager.push("PlayScreen",mood_input.text)
         MenuButton:
             text:"About"
             on_press:app.manager.push("AboutScreen")
@@ -42,17 +43,13 @@
             on_press:app.manager.push("SettingsScreen")
 
 <RkScreenManager>
-    Screen:
+    MainMenu:
         name:"MainMenu"
-        MainMenu
-    Screen:
+    PlayScreen:
         name:"PlayScreen"
-        PlayScreen:
-    Screen:
+    AboutScreen:
         name:"AboutScreen"
-        AboutScreen:
-    Screen:
+    SettingsScreen:
         name:"SettingsScreen"
-        SettingsScreen:
 
 

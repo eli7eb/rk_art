@@ -1,11 +1,11 @@
 import os
 from kivy.lang import Builder
 from kivy.properties import StringProperty
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.screenmanager import Screen
 
 #path=os.getcwd()
 #project_path=path+"\\"+"src"+"\\"+"GameScreens"+"\\"
-Builder.load_file("about_screen.kv")
+Builder.load_file("View/about_screen.kv")
 
-class AboutScreen(BoxLayout):
+class AboutScreen(Screen):
     title = StringProperty()

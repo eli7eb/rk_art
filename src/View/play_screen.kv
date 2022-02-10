@@ -1,6 +1,27 @@
-<PlayScreen>:
-    name:"play"
+<DashboardButton@Button>:
+    background_color:(0,0,0,0)
+    back_color:(1,0,1,1)
+    font_size: 0.3 * self.height
+    size_hint:.9,1
+    border_radius:[5]
+    canvas.before:
+        Color:
+            rgba:
+                (48/255,84/255,150/255,1) if self.state == 'normal' else (0.6,0.6,1,1) # Color is red if button is not pressed, otherwise color is green
+        RoundedRectangle:
+            size:self.size
+            pos:self.pos
+            radius:[10]
 
+<DashboardLabel@Label>:
+    size_hint:.8,1
+
+
+<PlayScreen>:
+    id:play_screen
+    name:"play"
+    on_pre_enter: print('on_pre_enter', self.name)
+    on_enter: print('on_enter', self.name)
     BoxLayout:
         orientation:'vertical'
         Button:
@@ -19,27 +40,25 @@
         BoxLayout:
             orientation:'horizontal'
             #text:'dashboard'
-            size_hint:1,.2
-
-            Button:
+            size_hint:1,.1
+            spacing:20
+            DashboardButton:
                 name:"Go Back"
                 # TODO when in play text should be pause
                 text:"go back"
-                size_hint:.8,1
+
                 on_release:
                     app.manager.pop()
-            Button:
+            DashboardButton:
                 name:"Reshuffle"
                 text:"reshuffle"
                 # TODO active only in play
-                size_hint:.8,1
-            Label:
+
+            DashboardLabel:
                 text:"score"
-                size_hint:.8,1
-            Label:
+            DashboardLabel:
                 text:"art piece info"
-                size_hint:.8,1
-            Label:
+
+            DashboardLabel:
                 # TODO number of tries number of tiles left to go time leader board
                 text:"play stats"
-                size_hint:.8,1

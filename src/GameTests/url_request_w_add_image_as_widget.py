@@ -304,7 +304,7 @@ class ImageApp(App):
     def show_image(self):
         mood = random.choice(MOOD_IDEAS)
         img_src = StringProperty()
-        remote = False
+        remote = True
 
         if remote:
 
