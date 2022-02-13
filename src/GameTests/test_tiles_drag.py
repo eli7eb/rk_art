@@ -1,6 +1,5 @@
 import requests
 import json
-import math
 # TODO only for the text
 import random
 import datetime
@@ -8,20 +7,13 @@ from kivy import Config
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.behaviors import DragBehavior
-from kivy.uix.widget import Widget
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.image import Image as Kimage, AsyncImage as KAsyncImage
-from kivy.core.image import Image as CoreImage
-from PIL import ImageDraw, ImageFont
-from io import BytesIO
+from kivy.uix.image import Image as Kimage
 from random import randrange
-from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, TILE_INVISIBLE
-from src.GameUtils.game_logger import RkLogger
-from src.GameElements.game_tile import Tile
+from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS
+from Controller.utils import RkLogger
 from PIL import Image
 
 GLOBAL_TILE_SIZE = 512
@@ -362,7 +354,7 @@ class TilesApp(App):
         art_title_obj = get_art_tiles.get_art_image()
 
         print('getArtTiles done')
-        print('get_art_image')
+        print('get_art_image_by_object_number')
         art_image = GetArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
         print('getBitMapFromTiles')
         canvas_img = art_image.get_bitmap_from_tiles()

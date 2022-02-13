@@ -3,13 +3,11 @@ import json
 # TODO only for the text
 import random
 import datetime
-from kivy.uix.image import Image as Kimage, AsyncImage as KAsyncImage
-from kivy.core.image import Image as CoreImage
-from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
+from kivy.uix.image import Image as Kimage
+from PIL import Image
 from random import randrange
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS
-from src.GameUtils.game_logger import RkLogger
+from Controller.utils import RkLogger
 
 GLOBAL_TILE_SIZE = 512
 

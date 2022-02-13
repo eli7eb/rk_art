@@ -3,25 +3,21 @@ import json
 # TODO only for the text
 import random
 import datetime
-import io
 from pathlib import Path
 
 from kivy import Config
 from kivy.lang import Builder
 from kivy.app import App
-from kivy.uix.widget import Widget
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.image import Image as KImage, AsyncImage as KAsyncImage
+from kivy.uix.image import Image as KImage
 from kivy.core.image import Image as CoreImage
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 from io import BytesIO
 from random import randrange
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, GAME_LEVELS, LEVEL_NEWBIE
-from src.GameUtils.game_logger import RkLogger
+from Controller.utils import RkLogger
 
 GLOBAL_TILE_SIZE = 512
 
