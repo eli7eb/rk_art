@@ -7,7 +7,7 @@ from kivy.uix.image import Image as KImage
 from kivy.core.image import Image as CoreImage
 from PIL import Image
 from io import BytesIO
-
+from array import *
 from kivy.properties import StringProperty
 from random import randrange
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, SCREEN_WIDTH, SCREEN_HEIGHT, local_art
@@ -24,8 +24,41 @@ file_mode = 'RGB'
 
 class GetArtImage():
 
+    def __init__(self, game_level):
+        self.game_level = game_level
+
+        self.logger = RkLogger.__call__().get_logger()
+
+
+
+    # box=(left, upper, right, lower).
+    def crop_pil_image(self, pillow_image):
+        tile_grid = []
+        # resize to 600 800
+        self.pil_image = pillow_image
+        tile_size = self.game_level.tile_size
+        tiles_hor = self.game_level.tiles_hor
+        tiles_ver = self.game_level.tiles_ver
+        index = 0
+        for i in range(tiles_ver):
+            col = []
+            for j in range(tiles_hor):
+                box = (tile_size*j,tile_size*i,tile_size*j+tile_size,tile_size*i+tile_size)
+                print(box)
+                crop_tile = self.pil_image.crop(box)
+                crop_name = "assets/cropped_"+str(index)+"_"+str(i)+"_"+str(j)+"_image.jpg"
+                crop_tile.save(crop_name)
+                tile_grid.append(crop_tile)
+                index+=1
+
+        print(tile_grid)
+        return tile_grid
+
+    def resize_image(self, pil_image):
+        pass
+
     def get_art_image(self,mood_str):
-        remote = True
+        remote = False
         if (mood_str == '' and remote is True):
             mood = random.choice(MOOD_IDEAS)
         else:
@@ -57,13 +90,18 @@ class GetArtImage():
             local_art_object = local_art[local_art_key]
             base_path = Path(__file__).parent.resolve()
             file_path =  local_art_object['file']
-            pillow_image = Image.open(base_path/file_path)
+            grid_image = Image.open(base_path/file_path)
 
             self.title = local_art_object['title']
             self.long_title = local_art_object['long_title']
+            pillow_image = grid_image.resize((SCREEN_WIDTH, SCREEN_HEIGHT), Image.LANCZOS)
+
 
         image_bytes = BytesIO()
         pillow_image.save(image_bytes, format='png')
+
+        # before return - create a grid of tiles
+        tiles_grid = self.crop_pil_image(pillow_image)
         image_bytes.seek(0)
 
         # load image data in a kivy texture
@@ -74,6 +112,7 @@ class GetArtImage():
         k_image.texture = texture
         return texture, title, long_title
         #self.root.ids.img.texture = texture
+
 
 class ArtInfo:
 
@@ -107,7 +146,12 @@ class ArtTiles:
         return json_obj
 
 
-
+# handle cropped image
+# take the texture and divide it to grid tiles
+# return grid of tiles
+class GetCroppedImage:
+    def __init__(self, **kwargs):
+        pass
 
 
 
