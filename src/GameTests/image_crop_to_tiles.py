@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 from random import randrange
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, GAME_LEVELS, LEVEL_NEWBIE
-from Controller.utils import RkLogger
+from Controller.utils.game_logger import RkLogger
 
 GLOBAL_TILE_SIZE = 512
 

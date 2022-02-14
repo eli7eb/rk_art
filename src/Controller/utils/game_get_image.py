@@ -32,26 +32,57 @@ class GetArtImage():
 
 
     # box=(left, upper, right, lower).
-    def crop_pil_image(self, pillow_image):
+    # prepare a 2 dim array for the image as PIL and for the texture
+    def crop_pil_image(self, pillow_image,title):
         tile_grid = []
         # resize to 600 800
+
+        # prepare a grid for the texture too
+        # load image data in a kivy texture
+
+
         self.pil_image = pillow_image
+        self.title = title
         tile_size = self.game_level.tile_size
         tiles_hor = self.game_level.tiles_hor
         tiles_ver = self.game_level.tiles_ver
         index = 0
+        tiles_grid_dict = [dict() for i in range(tiles_hor*tiles_ver)]
+        self.logger.info(self.title)
         for i in range(tiles_ver):
             col = []
             for j in range(tiles_hor):
                 box = (tile_size*j,tile_size*i,tile_size*j+tile_size,tile_size*i+tile_size)
                 print(box)
                 crop_tile = self.pil_image.crop(box)
-                crop_name = "assets/cropped_"+str(index)+"_"+str(i)+"_"+str(j)+"_image.jpg"
-                crop_tile.save(crop_name)
-                tile_grid.append(crop_tile)
-                index+=1
+                # get the texture and kimage from pil image
+                image_bytes = BytesIO()
+                try:
+                    crop_tile.save(BytesIO(image_bytes), format='png')
+                except Exception as e:
+                    self.logger.error("e "+e)
+                finally:
+                    core_image = CoreImage(image_bytes, ext='png')
+                texture = core_image.texture
+                k_image = KImage()
+                k_image.texture = texture
+                # add unique identifier for the cropped save
+                # TODO in the end delete this
+                now = datetime.datetime.now()
+                now_str = now.strftime("%Y-%m-%d-%H-%M-%S")
+                crop_name = "assets/cropped_"+str(index)+"_"+str(i)+"_"+str(j)+"_image_"+now_str+".png"
+                try :
+                    crop_tile.save(crop_name)
+                except Exception as e:
+                    self.logger.error(e + " " + self.title)
+                finally:
+                    try:
+                        tiles_grid_dict.append({'tile_x':j,'tile_y':i,'pil_tile':crop_tile,'texture': texture,'k_image':k_image})
+                        index+=1
+                    except Exception as ae:
+                        self.logger.error(ae)
+                        raise SystemExit(ae)
 
-        print(tile_grid)
         return tile_grid
 
     def resize_image(self, pil_image):
@@ -73,8 +104,8 @@ class GetArtImage():
             art_info = art_info_obj.get_image_list(mood)
 
             art_tiles = ArtTiles()
-            title = art_info['title']
-            long_title = art_info['longTitle']
+            self.title = art_info['title']
+            self.long_title = art_info['longTitle']
             art_title_obj = art_tiles.get_art_image_by_object_number(art_info['objectNumber'])
             art_image = ArtImage(art_title_obj, SCREEN_WIDTH, SCREEN_HEIGHT)
             image_to_display = art_image.get_bitmap_from_tiles()
@@ -97,20 +128,12 @@ class GetArtImage():
             pillow_image = grid_image.resize((SCREEN_WIDTH, SCREEN_HEIGHT), Image.LANCZOS)
 
 
-        image_bytes = BytesIO()
-        pillow_image.save(image_bytes, format='png')
-
         # before return - create a grid of tiles
-        tiles_grid = self.crop_pil_image(pillow_image)
-        image_bytes.seek(0)
+        tiles_grid = self.crop_pil_image(pillow_image,self.title)
 
-        # load image data in a kivy texture
-        core_image = CoreImage(image_bytes, ext='png')
 
-        texture = core_image.texture
-        k_image = KImage()
-        k_image.texture = texture
-        return texture, title, long_title
+
+        return tiles_grid, self.title, self.long_title
         #self.root.ids.img.texture = texture
 
 
