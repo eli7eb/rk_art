@@ -30,7 +30,10 @@ class PlayScreen(Screen):
         artImage = GetArtImage(game_level)
 
         tiles_grid, title, long_title = artImage.get_art_image(self.play_mood_str)
-        self.ids.image_on_button_1.texture = tiles_grid[15]['texture']
+        self.ids.image_on_button_1.texture = tiles_grid[0]['texture']
+        self.ids.image_on_button_2.texture = tiles_grid[1]['texture']
+        self.ids.image_on_button_3.texture = tiles_grid[2]['texture']
+        self.ids.image_on_button_4.texture = tiles_grid[3]['texture']
         #tiles_grid[0]
         self.logger.info("title "+title+ " long " + long_title)
 

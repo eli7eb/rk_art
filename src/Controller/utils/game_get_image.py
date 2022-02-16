@@ -46,7 +46,8 @@ class GetArtImage():
         tiles_hor = self.game_level.tiles_hor
         tiles_ver = self.game_level.tiles_ver
         index = 0
-        tiles_grid_dict = [dict() for i in range(tiles_hor*tiles_ver)]
+        tiles_grid_dict = []
+        # tiles_grid_dict = [dict() for i in range(tiles_hor*tiles_ver)]
         self.logger.info(self.title)
         for i in range(tiles_ver):
             col = []
