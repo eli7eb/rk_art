@@ -34,7 +34,6 @@ class GetArtImage():
     # box=(left, upper, right, lower).
     # prepare a 2 dim array for the image as PIL and for the texture
     def crop_pil_image(self, pillow_image,title):
-        tile_grid = []
         # resize to 600 800
 
         # prepare a grid for the texture too
@@ -55,14 +54,16 @@ class GetArtImage():
                 box = (tile_size*j,tile_size*i,tile_size*j+tile_size,tile_size*i+tile_size)
                 print(box)
                 crop_tile = self.pil_image.crop(box)
+                k_crop_tile = crop_tile.copy()
                 # get the texture and kimage from pil image
-                image_bytes = BytesIO()
+                k_image_bytes = BytesIO()
                 try:
-                    crop_tile.save(BytesIO(image_bytes), format='png')
+                    k_crop_tile.save(k_image_bytes, format='png')
+                    k_image_bytes.seek(0)
                 except Exception as e:
                     self.logger.error("e "+e)
                 finally:
-                    core_image = CoreImage(image_bytes, ext='png')
+                    core_image = CoreImage(k_image_bytes, ext='png')
                 texture = core_image.texture
                 k_image = KImage()
                 k_image.texture = texture
@@ -83,7 +84,7 @@ class GetArtImage():
                         self.logger.error(ae)
                         raise SystemExit(ae)
 
-        return tile_grid
+        return tiles_grid_dict
 
     def resize_image(self, pil_image):
         pass
