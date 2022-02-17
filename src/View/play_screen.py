@@ -18,9 +18,10 @@ Builder.load_file("View/play_screen.kv")
 class PlayScreen(Screen):
     title = StringProperty()
     play_mood_str = ''
+    logger = RkLogger.__call__().get_logger()
 
     def on_enter(self, **kwargs):
-        self.logger = RkLogger.__call__().get_logger()
+
         Clock.schedule_once(self.get_art_work,1)
 
     # get the art work file
@@ -30,25 +31,33 @@ class PlayScreen(Screen):
         artImage = GetArtImage(game_level)
 
         tiles_grid, title, long_title = artImage.get_art_image(self.play_mood_str)
-        self.ids.image_on_button_1.texture = tiles_grid[0]['texture']
-        self.ids.image_on_button_2.texture = tiles_grid[1]['texture']
-        self.ids.image_on_button_3.texture = tiles_grid[2]['texture']
-        self.ids.image_on_button_4.texture = tiles_grid[3]['texture']
+        self.ids.image_button_1.texture = tiles_grid[0]['texture']
+        self.ids.image_button_2.texture = tiles_grid[1]['texture']
+        self.ids.image_button_3.texture = tiles_grid[2]['texture']
+        self.ids.image_button_4.texture = tiles_grid[3]['texture']
         #tiles_grid[0]
         self.logger.info("title "+title+ " long " + long_title)
 
-class ImageButton(Image):
-   def __init__(self, **kwargs):
-        super(ImageButton, self).__init__(**kwargs)
+class DragImage(DragBehavior, Image):
+    def __init__(self, **kwargs):
+        super(DragImage, self).__init__(**kwargs)
+        self.drag_timeout = 10000000
+        self.drag_distance = 0
+        self.drag_rectangle = [self.x, self.y, self.width, self.height]
 
-class DragButton(DragBehavior, Button):
     dragging = BooleanProperty(False)
-    size = (200,200)
+    # size = (200,200)
     original_pos = ListProperty()
+
+    def on_pos(self, *args):
+        self.drag_rectangle = [self.x, self.y, self.width, self.height]
+
+    def on_size(self, *args):
+        self.drag_rectangle = [self.x, self.y, self.width, self.height]
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            #logger.info('on touch down')
+            print('on touch down')
             self.original_pos = self.pos
         return super().on_touch_down(touch)
 
@@ -56,6 +65,7 @@ class DragButton(DragBehavior, Button):
         if touch.grab_current is self:
             self.opacity = 0.4
             self.dragging = True
+            print('on touch move')
         return super().on_touch_move(touch)
 
     def on_touch_up(self, touch):
@@ -63,6 +73,7 @@ class DragButton(DragBehavior, Button):
         if self.dragging:
             self.opacity = 1
             self.dragging = False
+            print('on touch up')
             #if self.collide_widget(app.root.ids.remove_zone):
             #    self.parent.remove_widget(self)
             #else:
