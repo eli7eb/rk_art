@@ -1,0 +1,4 @@
+# Default ignored files
+/workspace.xml
+src/Controller/utils/images
+src/Controller/utils/local_images/assets
