@@ -9,9 +9,11 @@ from kivy.uix.button import Button
 from kivy.properties import BooleanProperty, ListProperty
 from kivy.animation import Animation
 from Controller.utils.game_get_image import GetArtImage
+from Controller.utils.game_shuffle_utils import ShuffleUtils
 from Controller.utils.game_logger import RkLogger
 from src.GameConsts.game_consts import LEVEL_NEWBIE, GAME_LEVELS
-
+from src.GameConsts.game_consts import TILE_IN_SHUFFLE_BOARD, TILE_ON_BOARD_TEST, TILE_INVISIBLE, TILE_IN_TILES_BANK
+from src.GameConsts.game_consts import TILE_IN_PLACE, TILE_DRAGGED, TILE_DROPPED
 Builder.load_file("View/play_screen.kv")
 
 
@@ -31,10 +33,12 @@ class PlayScreen(Screen):
         artImage = GetArtImage(game_level)
 
         tiles_grid, title, long_title = artImage.get_art_image(self.play_mood_str)
-        self.ids.image_button_1.texture = tiles_grid[0]['texture']
-        self.ids.image_button_2.texture = tiles_grid[1]['texture']
-        self.ids.image_button_3.texture = tiles_grid[2]['texture']
-        self.ids.image_button_4.texture = tiles_grid[3]['texture']
+        shuffle_utils = ShuffleUtils(game_level)
+        shuffle_arr = shuffle_utils.get_random_set_from_list()
+        self.ids.image_button_1.texture = tiles_grid[shuffle_arr[0]]['texture']
+        self.ids.image_button_2.texture = tiles_grid[shuffle_arr[1]]['texture']
+        self.ids.image_button_3.texture = tiles_grid[shuffle_arr[2]]['texture']
+        self.ids.image_button_4.texture = tiles_grid[shuffle_arr[3]]['texture']
         #tiles_grid[0]
         self.logger.info("title "+title+ " long " + long_title)
 
