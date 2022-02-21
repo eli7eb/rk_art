@@ -23,6 +23,9 @@ class NavigationScreenManager (ScreenManager):
             self.transition.direction = "right"
             self.current = screen_name
 
+    def get_current_screen_name(self):
+        return self.current_screen.name
+
     def pass_play_mood(self, mood):
         # self.mood_str = self.s
         pass

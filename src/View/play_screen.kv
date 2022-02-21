@@ -71,13 +71,17 @@
                 on_release:
                     app.manager.pop()
             DashboardButton:
+                id:shuffle_button
                 name:"Reshuffle"
                 text:"reshuffle"
                 # TODO active only in play
-
+                on_release:
+                    root.reshuffle()
             DashboardLabel:
+                id:game_score_label
                 text:"score"
             DashboardLabel:
+                id:art_info_label
                 text:"art piece info"
 
             DashboardLabel:
