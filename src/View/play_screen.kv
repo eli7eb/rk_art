@@ -58,6 +58,7 @@
                     id:"puzzle_bg"
                     size:game_canvas.width,game_canvas.height
                     pos:game_canvas.x,game_canvas.y
+
         BoxLayout:
             orientation:'horizontal'
             #text:'dashboard'
@@ -86,4 +87,5 @@
 
             DashboardLabel:
                 # TODO number of tries number of tiles left to go time leader board
+                id:game_stats_label
                 text:"play stats"

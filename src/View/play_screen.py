@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.app import App
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -23,6 +24,7 @@ class PlayScreen(Screen):
     play_mood_str = ''
     game_level = 0
     tiles_grid = []
+    grid_layout = ObjectProperty()
     logger = RkLogger.__call__().get_logger()
 
     def on_enter(self, **kwargs):
@@ -30,10 +32,33 @@ class PlayScreen(Screen):
 
     def init_play_screen(self, dt):
         self.get_art_work()
+        self.init_grid_layout()
+        self.shuffle_utils = ShuffleUtils(self.game_level)
         self.reshuffle()
+        self.init_grid_before_play()
         self.set_titles()
         #self.ids.shuffle_button.disabled = True
 
+    # based on level decide if to show , half transparent or blank it out
+    # leave tiles as hints
+    def init_grid_before_play(self):
+        # show the image than disappear
+        for i in self.tiles_grid:
+            k_image = i['k_image']
+            k_image.size = (200,200)
+            k_image.size_hint = (None, None)
+            k_image.allow_stretch = True
+            #image.pos = (x_pos, y_pos)
+            self.grid_layout.add_widget(k_image)
+
+
+    # create the grid layout for the tiles
+    def init_grid_layout(self):
+        self.grid_layout = GridLayout(cols=self.game_level.tiles_hor,rows=self.game_level.tiles_ver,spacing=2)
+
+        self.ids.game_canvas.add_widget(self.grid_layout)
+        self.grid_layout.x = self.ids.game_canvas.x
+        self.grid_layout.y = self.ids.game_canvas.y+self.ids.game_canvas.height
     # get the art work file
     # for testing use remote = false
     def get_art_work(self):
@@ -47,14 +72,17 @@ class PlayScreen(Screen):
         #tiles_grid[0]
         self.logger.info("title "+title+ " long " + long_title)
 
-
+    # TODO style the labels
     def set_titles(self):
+        self.ids.art_info_label.text = ''
+        self.ids.game_score_label.text = ''
+        self.ids.game_stats_label.text = ''
         self.ids.art_info_label.text = self.title
 
 
     def reshuffle(self):
-        shuffle_utils = ShuffleUtils(self.game_level)
-        shuffle_arr = shuffle_utils.get_random_set_from_list()
+
+        shuffle_arr = self.shuffle_utils.get_random_set_from_list()
         self.ids.image_button_1.texture = self.tiles_grid[shuffle_arr[0]]['texture']
         self.ids.image_button_2.texture = self.tiles_grid[shuffle_arr[1]]['texture']
         self.ids.image_button_3.texture = self.tiles_grid[shuffle_arr[2]]['texture']

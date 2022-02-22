@@ -19,5 +19,6 @@ class ShuffleUtils():
 
     # get x random indexes from a list of y excluding what is in list z
     # i e 4, 16 , {2,4,5,6} will return 1 2 7 12
+    # get a list if the number exist run an additional random for it
     def get_random_set_from_list_excluding_list(self, num_random, list_length, list_exist):
         pass
