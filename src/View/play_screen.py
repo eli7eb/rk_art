@@ -45,9 +45,9 @@ class PlayScreen(Screen):
         # show the image than disappear
         for i in self.tiles_grid:
             k_image = i['k_image']
-            k_image.size = (200,200)
+            k_image.size = (self.ids.image_button_1.width,self.ids.image_button_1.height)
             k_image.size_hint = (None, None)
-            k_image.allow_stretch = True
+            #k_image.allow_stretch = True
             #image.pos = (x_pos, y_pos)
             self.grid_layout.add_widget(k_image)
 
@@ -57,13 +57,14 @@ class PlayScreen(Screen):
         self.grid_layout = GridLayout(cols=self.game_level.tiles_hor,rows=self.game_level.tiles_ver,spacing=2)
 
         self.ids.game_canvas.add_widget(self.grid_layout)
-        self.grid_layout.x = self.ids.game_canvas.x
-        self.grid_layout.y = self.ids.game_canvas.y+self.ids.game_canvas.height
+        self.grid_layout.x = self.ids.game_canvas.x+50
+        self.grid_layout.y = self.ids.game_canvas.y+self.ids.game_canvas.height - 150
+
     # get the art work file
     # for testing use remote = false
     def get_art_work(self):
         self.game_level = GAME_LEVELS[LEVEL_NEWBIE]
-        artImage = GetArtImage(self.game_level)
+        artImage = GetArtImage(self.game_level,(self.ids.game_canvas.width,self.ids.game_canvas.height))
 
         self.tiles_grid, title, long_title = artImage.get_art_image(self.play_mood_str)
         self.title = title

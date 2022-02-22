@@ -25,12 +25,19 @@ file_mode = 'RGB'
 
 class GetArtImage():
 
-    def __init__(self, game_level):
+    def __init__(self, game_level,canvas_size):
         self.game_level = game_level
-
+        self.canvas_width = canvas_size[0]*.95
+        self.canvas_height = canvas_size[1]*.95
         self.logger = RkLogger.__call__().get_logger()
 
 
+    # logic for calculate the tile size
+    # take the canvas as 95 percent of the whole area so we can have some borders
+    # divide by tile_hor and this is the size
+    def calculate_tile_size(self):
+        self.tile_size = self.canvas_width/self.game_level.tiles_hor
+        return self.tile_size
 
     # box=(left, upper, right, lower).
     # prepare a 2 dim array for the image as PIL and for the texture
@@ -43,9 +50,10 @@ class GetArtImage():
 
         self.pil_image = pillow_image
         self.title = title
-        tile_size = self.game_level.tile_size
+
         tiles_hor = self.game_level.tiles_hor
         tiles_ver = self.game_level.tiles_ver
+        tile_size = self.calculate_tile_size()  # self.game_level.tile_size
         index = 0
         tiles_grid_dict = []
         # tiles_grid_dict = [dict() for i in range(tiles_hor*tiles_ver)]

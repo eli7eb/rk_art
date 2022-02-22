@@ -48,12 +48,12 @@ local_art = { \
     }
 
 GAME_LEVELS = { \
-    LEVEL_NEWBIE: Level(LEVEL_NEWBIE, 'newbie', True, 200,     3, 4, 4, 4, True,True,0),
-    LEVEL_BEGIN: Level(LEVEL_BEGIN, 'begin', False,200,        3, 4, 4, 4, True,True,0),
-    LEVEL_INTER: Level(LEVEL_INTER, 'inter', True,100,         6, 8, 3, 6, True,True,0),
-    LEVEL_MASTER: Level(LEVEL_MASTER, 'master', True,100,      6, 8, 2, 6, True,True,0),
-    LEVEL_CHAMPION: Level(LEVEL_CHAMPION, 'champion', True,50,12,16, 2, 8, True,True,0),
-    LEVEL_NOVICE: Level(LEVEL_NOVICE, 'novice', True,50,      12,16, 1, 8, True,True,0),
+    LEVEL_NEWBIE: Level(LEVEL_NEWBIE, 'newbie', True,      3, 4, 4, 4, True,True,0),
+    LEVEL_BEGIN: Level(LEVEL_BEGIN, 'begin', False,        3, 4, 4, 4, True,True,0),
+    LEVEL_INTER: Level(LEVEL_INTER, 'inter', True,         6, 8, 3, 6, True,True,0),
+    LEVEL_MASTER: Level(LEVEL_MASTER, 'master', True,      6, 8, 2, 6, True,True,0),
+    LEVEL_CHAMPION: Level(LEVEL_CHAMPION, 'champion', True,12,16, 2, 8, True,True,0),
+    LEVEL_NOVICE: Level(LEVEL_NOVICE, 'novice', True,      12,16, 1, 8, True,True,0),
 }
 
 PORTRAIT = 'portrait'

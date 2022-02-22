@@ -66,3 +66,41 @@
 2022-02-22 14:00:37,171 	 [INFO | play_screen.py:73] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
 2022-02-22 14:01:04,936 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
 2022-02-22 14:01:05,543 	 [INFO | play_screen.py:73] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:31:32,244 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:31:32,764 	 [INFO | play_screen.py:73] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:32:40,550 	 [INFO | game_get_image.py:52] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:32:41,327 	 [INFO | play_screen.py:73] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:35:12,764 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:35:13,292 	 [INFO | play_screen.py:75] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:36:27,286 	 [INFO | game_get_image.py:52] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:36:28,066 	 [INFO | play_screen.py:77] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:37:20,170 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:37:20,662 	 [INFO | play_screen.py:77] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:38:48,389 	 [INFO | game_get_image.py:52] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:38:49,452 	 [INFO | play_screen.py:77] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 15:39:41,853 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:39:42,389 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:40:06,728 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:40:07,307 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:41:26,442 	 [INFO | game_get_image.py:52] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 15:41:26,955 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:11:00,412 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:11:01,140 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:17:58,479 	 [INFO | game_get_image.py:60] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:17:58,986 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:18:27,677 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:18:28,430 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:19:28,366 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:19:29,151 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:49:33,341 	 [INFO | game_get_image.py:60] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:49:33,898 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:51:59,512 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:52:00,273 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 17:54:15,159 	 [INFO | game_get_image.py:60] > Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 17:54:15,865 	 [INFO | play_screen.py:74] > title Vincent van Gogh, Self-portrait, 1887. long Vincent van Gogh, Self-portrait, 1887.
+2022-02-22 21:37:40,810 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 21:37:41,688 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 21:38:28,801 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 21:38:29,522 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 21:38:54,325 	 [INFO | game_get_image.py:60] > Johannes Vermeer, The Milkmaid, c. 1660
+2022-02-22 21:38:55,048 	 [INFO | play_screen.py:74] > title Johannes Vermeer, The Milkmaid, c. 1660 long Johannes Vermeer, The Milkmaid, c. 1660
