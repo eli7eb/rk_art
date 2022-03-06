@@ -48,16 +48,12 @@
                 center_x: self.parent.center_x+20
                 center_y: self.parent.center_y+10
 
-        Widget:
-            id:game_canvas
-            canvas:
-                Color:
-                    rgba:232, 231, 210
-
-                Rectangle:
-                    id:"puzzle_bg"
-                    size:game_canvas.width,game_canvas.height
-                    pos:game_canvas.x,game_canvas.y
+        BoxLayout:
+            Widget:
+                id:game_canvas
+                canvas:
+                    Color:
+                        rgba:232, 231, 210
 
         BoxLayout:
             orientation:'horizontal'
