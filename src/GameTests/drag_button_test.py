@@ -34,7 +34,9 @@ BoxLayout:
         id:right
         BoxLayout:
             orientation: 'vertical'
+            spacing:20
             Label:
+                id: do_nothing_zone
                 text: 'Do Nothing'
             Label:
                 id: remove_zone
@@ -58,9 +60,23 @@ class DragButton(DragBehavior, Button):
         return super().on_touch_down(touch)
 
     def on_touch_move(self, touch):
+        app = App.get_running_app()
         if touch.grab_current is self:
             self.opacity = 0.4
             self.dragging = True
+        if self.collide_widget(app.root.ids.remove_zone):
+            # highlight
+            app.root.ids.remove_zone.text = "I am on remove zone"
+            return super().on_touch_move(touch)
+        else:
+            app.root.ids.remove_zone.text = 'Remove Widget'
+
+        if self.collide_widget(app.root.ids.do_nothing_zone):
+            # highlight
+            app.root.ids.do_nothing_zone.text = "I am on do nothing"
+            return super().on_touch_move(touch)
+        else:
+            app.root.ids.do_nothing_zone.text = 'Do Nothing'
         return super().on_touch_move(touch)
 
     def on_touch_up(self, touch):

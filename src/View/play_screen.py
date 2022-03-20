@@ -55,8 +55,8 @@ class PlayScreen(Screen):
     def init_grid_before_play(self):
         # show the image than disappear
 
-        for i in self.tiles_grid:
-            k_image = i['k_image']
+        for t in self.tiles_grid:
+            k_image = t.k_image
             k_image.size = (self.ids.image_button_1.width,self.ids.image_button_1.height)
             k_image.size_hint = (None, None)
             #k_image.allow_stretch = True
@@ -119,10 +119,10 @@ class PlayScreen(Screen):
     def reshuffle(self):
 
         shuffle_arr = self.shuffle_utils.get_random_set_from_list()
-        self.ids.image_button_1.texture = self.tiles_grid[shuffle_arr[0]]['texture']
-        self.ids.image_button_2.texture = self.tiles_grid[shuffle_arr[1]]['texture']
-        self.ids.image_button_3.texture = self.tiles_grid[shuffle_arr[2]]['texture']
-        self.ids.image_button_4.texture = self.tiles_grid[shuffle_arr[3]]['texture']
+        self.ids.image_button_1.texture = self.tiles_grid[shuffle_arr[0]].texture
+        self.ids.image_button_2.texture = self.tiles_grid[shuffle_arr[1]].texture
+        self.ids.image_button_3.texture = self.tiles_grid[shuffle_arr[2]].texture
+        self.ids.image_button_4.texture = self.tiles_grid[shuffle_arr[3]].texture
 
 
 class DragImage(DragBehavior, Image):
@@ -143,16 +143,30 @@ class DragImage(DragBehavior, Image):
         self.drag_rectangle = [self.x, self.y, self.width, self.height]
 
     def on_touch_down(self, touch):
+
         if self.collide_point(*touch.pos):
             print('on touch down')
             self.original_pos = self.pos
         return super().on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        if touch.grab_current is self:
-            self.opacity = 0.4
-            self.dragging = True
-            print('on touch move')
+        app = App.get_running_app()
+        grid_layout = app.manager.current_screen.grid_layout
+        # loop on the grid for collide point
+        # if not lit - lit it
+        # if changed - turn off current and lit the new one
+        # else do nothing
+        for tile in grid_layout.children:
+            if self.collide_widget(tile):
+                self.opacity = 0.4
+                self.dragging = True
+        # if self.collide_point(self.tiles_grid):
+        #    print('on touch GRID')
+        #    self.original_pos = self.pos
+        # if touch.grab_current is self:
+        #    self.opacity = 0.4
+        #    self.dragging = True
+        #    print('on touch move')
         return super().on_touch_move(touch)
 
     def on_touch_up(self, touch):

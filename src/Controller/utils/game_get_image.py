@@ -10,6 +10,8 @@ from io import BytesIO
 from array import *
 from kivy.properties import StringProperty
 from random import randrange
+
+from GameElements.game_tile import Tile
 from src.GameConsts.game_consts import PORTRAIT, LANDSCAPE, MOOD_IDEAS, SCREEN_WIDTH, SCREEN_HEIGHT, local_art
 from src.GameConsts.game_consts import TILE_IN_SHUFFLE_BOARD
 from Controller.utils.game_logger import RkLogger
@@ -88,7 +90,8 @@ class GetArtImage():
                     self.logger.error(e + " " + self.title)
                 finally:
                     try:
-                        tiles_grid_dict.append({'tile_x':j,'tile_y':i,'pil_tile':crop_tile,'texture': texture,'k_image':k_image,'counter_displayed':0,'status':TILE_IN_SHUFFLE_BOARD})
+                        tile = Tile(j,i,crop_tile,texture,k_image,0,TILE_IN_SHUFFLE_BOARD,False)
+                        tiles_grid_dict.append(tile)
                         index+=1
                     except Exception as ae:
                         self.logger.error(ae)
