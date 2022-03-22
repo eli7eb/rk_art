@@ -156,10 +156,17 @@ class DragImage(DragBehavior, Image):
         # if not lit - lit it
         # if changed - turn off current and lit the new one
         # else do nothing
+        if self.collide_widget(grid_layout):
+            self.opacity = 0.4
         for tile in grid_layout.children:
             if self.collide_widget(tile):
-                self.opacity = 0.4
+                tile.opacity = 0.4
+                tile.mouse_hover = True
                 self.dragging = True
+            else:
+                tile.opacity = 1.0
+                tile.mouse_hover = False
+        # if self.collide_point(self.tiles_grid):
         # if self.collide_point(self.tiles_grid):
         #    print('on touch GRID')
         #    self.original_pos = self.pos
