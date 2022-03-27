@@ -15,6 +15,7 @@ from Controller.utils.game_get_image import GetArtImage
 from Controller.utils.game_shuffle_utils import ShuffleUtils
 from Controller.utils.game_logger import RkLogger
 from src.GameConsts.game_consts import LEVEL_NEWBIE, LEVEL_NEWBIE, LEVEL_BEGIN, GAME_LEVELS, FADE_DURATION
+from src.GameConsts.game_consts import OPACITY_HIDE_BG_LEVEL, OPACITY_HIDE_BG, OPACITY_SHOW_BG, OPACITY_HOVER_BG_LEVEL
 from src.GameConsts.game_consts import TILE_IN_SHUFFLE_BOARD, TILE_ON_BOARD_TEST, TILE_INVISIBLE, TILE_IN_TILES_BANK
 from src.GameConsts.game_consts import TILE_IN_PLACE, TILE_DRAGGED, TILE_DROPPED
 Builder.load_file("View/play_screen.kv")
@@ -68,9 +69,9 @@ class PlayScreen(Screen):
     # remove widgets from layout
     def hide_bg(self, dt):
         if self.game_level.id == LEVEL_BEGIN or self.game_level.id == LEVEL_NEWBIE:
-            fade_opacity = 0.3
+            fade_opacity = OPACITY_HIDE_BG_LEVEL
         else:
-            fade_opacity = 0
+            fade_opacity = OPACITY_HIDE_BG
             Clock.schedule_once(self.remove_layout_children, FADE_DURATION + 1)
 
         if self.grid_layout.children:
@@ -85,7 +86,7 @@ class PlayScreen(Screen):
 
     # create the grid layout for the tiles
     def init_grid_layout(self):
-        self.grid_layout = GridLayout(cols=self.game_level.tiles_hor,rows=self.game_level.tiles_ver,spacing=2)
+        self.grid_layout = GridLayout(cols=self.game_level.tiles_hor,rows=self.game_level.tiles_ver,spacing=2,col_default_width = self.ids.image_button_1.width, row_default_height = self.ids.image_button_1.height)
 
         self.ids.game_canvas.add_widget(self.grid_layout)
         self.grid_layout.x = self.ids.game_canvas.x+50
@@ -153,19 +154,51 @@ class DragImage(DragBehavior, Image):
         app = App.get_running_app()
         grid_layout = app.manager.current_screen.grid_layout
         # loop on the grid for collide point
+        # after 4 times you can break
+
         # if not lit - lit it
         # if changed - turn off current and lit the new one
         # else do nothing
-        if self.collide_widget(grid_layout):
-            self.opacity = 0.4
+        # only one tile is lit at one time
+        # calculate percentage based on location
+        prev_tile = None
+        counter = 0
+
+        the_closest_tile = None
         for tile in grid_layout.children:
+            # calculate the distance between the centers and keep it if its smaller than the prev one
+            # increment starts when there is a collide
+
+            if counter > 4:
+                break
             if self.collide_widget(tile):
-                tile.opacity = 0.4
-                tile.mouse_hover = True
-                self.dragging = True
-            else:
-                tile.opacity = 1.0
-                tile.mouse_hover = False
+                counter += 1
+                if the_closest_tile is None:
+                    the_closest_tile = tile
+                else:
+                    if tile.center_x - self.center_x > the_closest_tile.center_x - self.center_x  and \
+                        tile.center_y - self.center_y > the_closest_tile.center_y - self.center_y:
+
+                        the_closest_tile = tile
+                    else:
+                        tile.opacity = OPACITY_HIDE_BG_LEVEL
+                        tile.mouse_hover = False
+
+        if the_closest_tile is None:
+            pass
+        else:
+            the_closest_tile.opacity = OPACITY_SHOW_BG
+            the_closest_tile.mouse_hover = True
+            self.dragging = True
+            # self.logger.info("tile pos x:" + tile.tile_x + " y: " + tile.tile_y)
+            # if self.collide_widget(tile):
+                #     tile.opacity = OPACITY_SHOW_BG
+                #     tile.mouse_hover = True
+                #      self.dragging = True
+            #      break
+            # else:
+                #     tile.opacity = OPACITY_HIDE_BG_LEVEL
+            #     tile.mouse_hover = False
         # if self.collide_point(self.tiles_grid):
         # if self.collide_point(self.tiles_grid):
         #    print('on touch GRID')
@@ -176,8 +209,17 @@ class DragImage(DragBehavior, Image):
         #    print('on touch move')
         return super().on_touch_move(touch)
 
+    # testing the distance between the centers of the moving tile and the current tile in the grid
+    def curr_closer(self, *kargs):
+        #prev_diff_x = self.center_x - prev_tile.center_x
+        #prev_diff_y = self.center_y - prev_tile.center_y
+        #curr_diff_x = self.center_x - prev_tile.center_x
+        #curr_diff_x = self.center_x - prev_tile.center_x
+        return True
+
     def on_touch_up(self, touch):
         app = App.get_running_app()
+        # see if matches the puzzle if so leave if not move back
         if self.dragging:
             self.opacity = 1
             self.dragging = False

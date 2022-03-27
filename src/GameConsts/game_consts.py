@@ -19,6 +19,10 @@ VIEW_STATE_QUIT = 7
 
 HALF_SCREEN_WIDTH = SCREEN_WIDTH / 2
 HALF_SCREEN_HEIGHT = SCREEN_HEIGHT / 2
+OPACITY_HIDE_BG_LEVEL = 0.3
+OPACITY_SHOW_BG = 1.0
+OPACITY_HIDE_BG = 0.0
+OPACITY_HOVER_BG_LEVEL = 0.4
 
 # all level parameters are a calculation of LEVEL
 # log levels to write into the log file:
