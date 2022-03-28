@@ -63,6 +63,7 @@ class PlayScreen(Screen):
             #k_image.allow_stretch = True
             #image.pos = (x_pos, y_pos)
             self.grid_layout.add_widget(k_image)
+            # self.logger.info("k_image w " + str(k_image.width) + " h " + str(k_image.height) + " x " + str(k_image.x) + " y " + str(k_image.y))
         Clock.schedule_once(self.hide_bg, self.game_level.show_time_seconds)
 
 
@@ -178,7 +179,9 @@ class DragImage(DragBehavior, Image):
                 else:
                     if tile.center_x - self.center_x > the_closest_tile.center_x - self.center_x  and \
                         tile.center_y - self.center_y > the_closest_tile.center_y - self.center_y:
-
+                        # switch the tile
+                        the_closest_tile.opacity = OPACITY_HIDE_BG_LEVEL
+                        the_closest_tile.mouse_hover = False
                         the_closest_tile = tile
                     else:
                         tile.opacity = OPACITY_HIDE_BG_LEVEL
